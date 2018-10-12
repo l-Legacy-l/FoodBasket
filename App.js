@@ -1,12 +1,12 @@
-import React from 'react';
-import {Text} from 'react-native';
+import React from 'react'
+import Navigation from './Navigation/Navigation.js'
 
 
 export default class App extends React.Component
 {
   render() {
     return (
-      <Text>My first app</Text>
+      <Navigation/>
     );
   }
 }
