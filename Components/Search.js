@@ -1,5 +1,6 @@
 import React from 'react'
 import{StyleSheet,View, Button, TextInput} from 'react-native'
+import FoodItem from './FoodItem.js'
 
 class Search extends React.Component
 {
@@ -11,7 +12,7 @@ class Search extends React.Component
                 </TextInput>
 
                 <Button style={{height: 100}} title="Search" onPress={()=>{}} ></Button>
-
+                <View><FoodItem/></View>
             </View>
         )
     }
