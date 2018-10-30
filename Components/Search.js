@@ -1,6 +1,7 @@
 import React from 'react'
-import{StyleSheet,View, Button, TextInput} from 'react-native'
+import{StyleSheet,View, Button, TextInput, FlatList} from 'react-native'
 import FoodItem from './FoodItem.js'
+import itemFood from '../Helpers/data.js'
 
 class Search extends React.Component
 {
@@ -12,7 +13,12 @@ class Search extends React.Component
                 </TextInput>
 
                 <Button style={{height: 100}} title="Search" onPress={()=>{}} ></Button>
-                <View><FoodItem/></View>
+                <FlatList
+                    data = {itemFood}
+                    keyExtractor={(item) => item.code.toString()}
+                    renderItem={({item}) => <FoodItem food={item}/>}
+                />
+                
             </View>
         )
     }

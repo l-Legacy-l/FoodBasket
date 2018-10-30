@@ -5,24 +5,25 @@ class FoodItem extends React.Component
 {
     render()
     {
+        const food = this.props.food
         return(
             <TouchableOpacity style={styles.mainContainer}>
                 <Image
                     style={styles.image}
-                    source={{uri: "bini" }} 
+                    source={{uri: food.imageFront }} 
                 />
 
                 <View styles={styles.contentContainer}>
                     <View style={styles.contentHeader}>
                         <Text style={styles.titleText}>
-                            {"rlkrrrrrrrkjhj"}
+                            {food.title}
                         </Text>
                     </View>
 
                     <View style={styles.contentBarcode}>
                         <Text style={styles.descriptionText}>
-                        {"ikkkkkkkk"}
-                        </Text> 
+                        {food.code}
+                        </Text>
                     </View>
                 </View>
             </TouchableOpacity>

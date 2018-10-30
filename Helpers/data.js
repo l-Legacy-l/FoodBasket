@@ -1,6 +1,6 @@
 export default data = [
     {
-       imageFood:"https://static.openfoodfacts.org/images/products/302/933/000/3533/front_fr.96.400.jpg",
+       imageFront:"https://static.openfoodfacts.org/images/products/302/933/000/3533/front_fr.96.400.jpg",
        title:"Biscuit",
        code:"123456789",
        ingredients:["farine","blé"],
