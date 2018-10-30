@@ -1,10 +1,30 @@
 import React from 'react'
 import{StyleSheet,View, Button, TextInput, FlatList} from 'react-native'
 import FoodItem from './FoodItem.js'
-import itemFood from '../Helpers/data.js'
+import { getFoodFromApi } from '../API/OFFApi'
+//import itemFood from '../Helpers/data.js'
 
 class Search extends React.Component
 {
+    //On définit les propriétés dans le constructeur du component
+    constructor(props)
+    {
+        super(props)
+
+        this.state = {
+            food:""
+        }
+
+        this.searchedText=""
+    }
+
+    _loadFood()
+    {
+        if(this.searchedText.length == 13)
+        {
+            getFoodFromApi(this.searchedText).then(data => console.log(data))
+        }
+    }
     render()
     {
         return(
