@@ -14,8 +14,11 @@ class Search extends React.Component
 
                 <Button style={{height: 100}} title="Search" onPress={()=>{}} ></Button>
                 <FlatList
+                    //correspond à mon aliment
                     data = {itemFood}
+                    // On identifie une proriété qui va servir d'identifiant unique
                     keyExtractor={(item) => item.code.toString()}
+                    // Correspond au rendu des données de la liste
                     renderItem={({item}) => <FoodItem food={item}/>}
                 />
                 
