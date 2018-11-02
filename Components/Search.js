@@ -1,7 +1,7 @@
 import React from 'react'
-import{StyleSheet,View, Button, TextInput, FlatList} from 'react-native'
+import{StyleSheet,View, Button, TextInput} from 'react-native'
 import FoodItem from './FoodItem.js'
-import { getFoodFromApi } from '../API/OFFApi'
+import { getFoodFromApi } from '../API/OFFApi.js'
 //import itemFood from '../Helpers/data.js'
 
 class Search extends React.Component
@@ -12,7 +12,7 @@ class Search extends React.Component
         super(props)
 
         this.state = {
-            food:""
+            food:[]
         }
 
         this.searchedText=""
@@ -20,28 +20,22 @@ class Search extends React.Component
 
     _loadFood()
     {
-        if(this.searchedText.length == 13)
-        {
-            getFoodFromApi(this.searchedText).then(data => console.log(data))
-        }
+        getFoodFromApi("3029330003533").then(data => {
+            this.setState({ food: data.product })
+        })
     }
     render()
     {
+
         return(
             <View style={styles.mainContainer}>
                 <TextInput style={styles.textInput} placeholder="Insere the food's barcode">
                 </TextInput>
-
-                <Button style={{height: 100}} title="Search" onPress={()=>{}} ></Button>
-                <FlatList
-                    //correspond à mon aliment
-                    data = {itemFood}
-                    // On identifie une proriété qui va servir d'identifiant unique
-                    keyExtractor={(item) => item.code.toString()}
-                    // Correspond au rendu des données de la liste
-                    renderItem={({item}) => <FoodItem food={item}/>}
-                />
+  
+                <Button style={{height: 100}} title="Search" onPress={()=>{this._loadFood()}} ></Button>
+                <FoodItem food={this.state.food}/>
                 
+                             
             </View>
         )
     }

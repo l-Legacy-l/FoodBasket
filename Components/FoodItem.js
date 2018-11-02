@@ -10,18 +10,18 @@ class FoodItem extends React.Component
             <TouchableOpacity style={styles.mainContainer}>
                 <Image
                     style={styles.image}
-                    source={{uri: food.imageFront }} 
+                    source={{uri: food.image_front_url}} 
                 />
 
                 <View styles={styles.contentContainer}>
                     <View style={styles.contentHeader}>
                         <Text style={styles.titleText}>
-                            {food.title}
+                            {food.product_name_fr}
                         </Text>
                     </View>
 
                     <View style={styles.contentBarcode}>
-                        <Text style={styles.descriptionText}>
+                        <Text style={styles.barcodeText}>
                         {food.code}
                         </Text>
                     </View>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create(
         paddingRight: 5,
         textAlign:"center"
     },
-    descriptionText:
+    barcodeText:
     {
         fontStyle: 'italic',
         fontSize: 16,
