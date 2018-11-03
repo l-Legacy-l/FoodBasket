@@ -2,7 +2,7 @@ import React from 'react'
 import{StyleSheet,View, Button, TextInput} from 'react-native'
 import FoodItem from './FoodItem.js'
 import { getFoodFromApi } from '../API/OFFApi.js'
-//import itemFood from '../Helpers/data.js'
+import Toast from 'react-native-simple-toast';
 
 class Search extends React.Component
 {
@@ -20,9 +20,20 @@ class Search extends React.Component
 
     _loadFood()
     {
-        getFoodFromApi("3029330003533").then(data => {
-            this.setState({ food: data.product })
+        getFoodFromApi("302933000353").then(data => {
+            if(data.status == 1)
+            {
+               this.setState({
+                    food: data.product
+                })
+            }
+            else
+            {
+                Toast.show("Le code barre ne renvoie vers aucun produit");
+            }
         })
+
+        console.log(this.state.food)
     }
     render()
     {
@@ -34,8 +45,7 @@ class Search extends React.Component
   
                 <Button style={{height: 100}} title="Search" onPress={()=>{this._loadFood()}} ></Button>
                 <FoodItem food={this.state.food}/>
-                
-                             
+                                            
             </View>
         )
     }
