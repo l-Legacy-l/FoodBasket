@@ -15,12 +15,12 @@ class Search extends React.Component
             food:[]
         }
 
-        this.searchedText=""
+        this.searchedText="";
     }
 
     _loadFood()
     {
-        getFoodFromApi("302933000353").then(data => {
+        getFoodFromApi(this.searchedText).then(data => {
             if(data.status == 1)
             {
                this.setState({
@@ -33,14 +33,19 @@ class Search extends React.Component
             }
         })
 
-        console.log(this.state.food)
+    }
+
+    _searchTextInputChanged(text)
+    {
+        this.searchedText = text;
     }
     render()
     {
 
         return(
             <View style={styles.mainContainer}>
-                <TextInput style={styles.textInput} placeholder="Insere the food's barcode">
+                <TextInput style={styles.textInput} placeholder="Insere the food's barcode" 
+                    onChangeText={(text)=>this._searchTextInputChanged(text)}>
                 </TextInput>
   
                 <Button style={{height: 100}} title="Search" onPress={()=>{this._loadFood()}} ></Button>
