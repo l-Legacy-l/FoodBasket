@@ -21,7 +21,7 @@ class Search extends React.Component
     _loadFood()
     {
         getFoodFromApi(this.searchedText).then(data => {
-            if(data.status == 1)
+            if(data.status === 1 && !isNaN(this.searchedText))
             {
                this.setState({
                     food: data.product
