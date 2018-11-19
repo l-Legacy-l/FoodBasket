@@ -1,5 +1,6 @@
 import {createStackNavigator} from 'react-navigation'
 import Search from '../Components/Search'
+import Camera from '../Components/Camera'
 
 const SearchStackNavigator = createStackNavigator(
 {
@@ -11,6 +12,11 @@ const SearchStackNavigator = createStackNavigator(
         {
             title: "Search"
         }
+    },
+
+    Camera:
+    {
+        screen: Camera
     }
 })
 

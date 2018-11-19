@@ -1,5 +1,5 @@
 import React from 'react'
-import{StyleSheet,View, Button, TextInput} from 'react-native'
+import{StyleSheet,View, Button, TextInput, Text} from 'react-native'
 import FoodItem from './FoodItem.js'
 import { getFoodFromApi } from '../API/OFFApi.js'
 import Toast from 'react-native-simple-toast';
@@ -12,7 +12,7 @@ class Search extends React.Component
         super(props)
 
         this.state = {
-            food:[]
+            food:[],
         }
 
         this.searchedText="";
@@ -39,8 +39,19 @@ class Search extends React.Component
     {
         this.searchedText = text;
     }
+
     render()
     {
+        
+        const { navigation } = this.props;
+        const textScan = navigation.getParam("textScan","Default");
+        console.log(textScan);
+
+        if(textScan != "Default")
+        {
+            this.searchedText = textScan;
+            this._loadFood();
+        }
 
         return(
             <View style={styles.mainContainer}>
@@ -49,8 +60,9 @@ class Search extends React.Component
                 </TextInput>
   
                 <Button style={{height: 100}} title="Search" onPress={()=>{this._loadFood()}} ></Button>
+                <Button style={{height: 400}} title="Ouvrir la caméra" onPress={() => {this.props.navigation.navigate("Camera")}}></Button>
                 <FoodItem food={this.state.food}/>
-                                            
+                
             </View>
         )
     }
@@ -58,6 +70,10 @@ class Search extends React.Component
 
 const styles = StyleSheet.create(
 {
+    container: {
+        flex: 1,
+        flexDirection: 'column'
+      },
     mainContainer:
     {
         flex:1
