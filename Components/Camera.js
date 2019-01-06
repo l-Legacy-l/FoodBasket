@@ -1,12 +1,38 @@
 import React from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
-import { BarCodeScanner } from 'expo';
+import { BarCodeScanner, Permissions } from 'expo';
 
 const { width } = Dimensions.get('window');
 
 export default class Camera extends React.Component {
 
+  constructor(props)
+  {
+      super(props)
+
+      this.state = {
+        hasCameraPermission: null,
+      }
+
+  }
+
+  async componentDidMount() {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    this.setState({ hasCameraPermission: status === 'granted' });
+    }
+
   render() {
+
+    const hasCameraPermission  = this.state;
+
+    if (hasCameraPermission === null) {
+      return <Text>Demande de permission pour la caméra</Text>;
+    }
+
+    if (hasCameraPermission === false) {
+      return <Text>Accès à la caméra non autorisé</Text>;
+    }
+
     return (
       <BarCodeScanner
         onBarCodeRead={(scan) => this.props.navigation.navigate("Search", {textScan: scan.data})}
