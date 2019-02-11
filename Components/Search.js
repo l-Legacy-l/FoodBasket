@@ -13,9 +13,11 @@ class Search extends React.Component
 
         this.state = {
             food:[],
+            showButtonAdd: false
         }
 
         this.searchedText="";
+        
     }
 
     _loadFood()
@@ -24,12 +26,16 @@ class Search extends React.Component
             if(data.status === 1 && !isNaN(this.searchedText))
             {
                this.setState({
-                    food: data.product
+                    food: data.product,
+                    showButtonAdd: false 
                 })
             }
             else
             {
                 Toast.show("Le code barre ne renvoie vers aucun produit");
+                this.setState({
+                    showButtonAdd: true,
+                })
             }
         })
 
@@ -61,8 +67,17 @@ class Search extends React.Component
   
                 <Button style={{height: 100}} title="Search" onPress={()=>{this._loadFood()}} ></Button>
                 <Button style={{height: 400}} title="Ouvrir la caméra" onPress={() => {this.props.navigation.navigate("Camera")}}></Button>
-                <FoodItem food={this.state.food}/>
-                
+
+                {
+                   this.state.showButtonAdd ? 
+                    <Button 
+                        style={{height: 400}} 
+                        title="Ajouter dans la base de données" 
+                        onPress={() => {}}>
+                    </Button> 
+                : null}
+            
+                <FoodItem food={this.state.food}/>         
             </View>
         )
     }
