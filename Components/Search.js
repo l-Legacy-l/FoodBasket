@@ -35,6 +35,7 @@ class Search extends React.Component
                 Toast.show("Le code barre ne renvoie vers aucun produit");
                 this.setState({
                     showButtonAdd: true,
+                    food: []
                 })
             }
         })
