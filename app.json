@@ -1,30 +1,4 @@
 {
-  "expo": {
-    "name": "FoodBasket",
-    "description": "This project is really great.",
-    "slug": "FoodBasket",
-    "privacy": "public",
-    "sdkVersion": "30.0.0",
-    "platforms": ["ios", "android"],
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "android": {        
-        "package": "com.example.myapp"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    }
-  }
+  "name": "FoodBasket3",
+  "displayName": "FoodBasket3"
 }

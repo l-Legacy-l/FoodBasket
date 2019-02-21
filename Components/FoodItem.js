@@ -36,14 +36,14 @@ const styles = StyleSheet.create(
     mainContainer:
     {
         height: 250,
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     image:
     {
         width: 170,
         height: 250,
         margin: 5,
-        backgroundColor: 'grey'
+        backgroundColor: 'white'
     },
     contentContainer:
     {
