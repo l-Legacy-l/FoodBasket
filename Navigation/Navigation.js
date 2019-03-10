@@ -1,6 +1,7 @@
-import { createStackNavigator, createAppContainer } from 'react-navigation'
+import {createStackNavigator, createAppContainer} from 'react-navigation'
 import Search from '../Components/Search'
 import Camera from '../Components/Camera'
+import AddFoodItem from '../Components/AddFoodItem'
 
 const SearchStackNavigator = createStackNavigator(
 {
@@ -18,7 +19,17 @@ const SearchStackNavigator = createStackNavigator(
     {
         screen: Camera
     },
+
+    AddFoodItem:
+    {
+        screen: AddFoodItem,
+        navigationOptions:
+        {
+            title: "Add an item"
+        }
+    }
 })
+
 const App = createAppContainer(SearchStackNavigator);
 
 export default App;

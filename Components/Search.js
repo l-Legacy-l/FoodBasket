@@ -7,8 +7,7 @@ import Toast from 'react-native-simple-toast';
 class Search extends React.Component
 {
     //On définit les propriétés dans le constructeur du component
-    constructor(props)
-    {
+    constructor(props) {
         super(props)
 
         this.state = {
@@ -17,21 +16,17 @@ class Search extends React.Component
         }
 
         this.searchedText="";
-        
     }
 
-    _loadFood()
-    {
+    _loadFood() {
         getFoodFromApi(this.searchedText).then(data => {
-            if(data.status === 1 && !isNaN(this.searchedText))
-            {
+            if(data.status === 1 && !isNaN(this.searchedText)) {
                this.setState({
                     food: data.product,
                     showButtonAdd: false 
                 })
             }
-            else
-            {
+            else {
                 Toast.show("Le code barre ne renvoie vers aucun produit");
                 this.setState({
                     showButtonAdd: true,
@@ -39,23 +34,19 @@ class Search extends React.Component
                 })
             }
         })
-
     }
 
-    _searchTextInputChanged(text)
-    {
+    _searchTextInputChanged(text) {
         this.searchedText = text;
     }
 
-    render()
-    {
+    render() {
         
         const { navigation } = this.props;
         const textScan = navigation.getParam("textScan","Default");
         console.log(textScan);
 
-        if(textScan != "Default")
-        {
+        if(textScan != "Default") {
             this.searchedText = textScan;
             this._loadFood();
         }
@@ -74,7 +65,7 @@ class Search extends React.Component
                     <Button 
                         style={{height: 400}} 
                         title="Ajouter dans la base de données" 
-                        onPress={() => {}}>
+                        onPress={() => {this.props.navigation.navigate("AddFoodItem")}}>
                     </Button> 
                 : null}
             
