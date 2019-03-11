@@ -1,20 +1,23 @@
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
-import  RNCamera  from 'react-native-camera';
+import {StyleSheet, View } from 'react-native';
+import  { RNCamera }  from 'react-native-camera';
 
-const { width } = Dimensions.get('window');
 
 export default class Camera extends React.Component {
 
-  constructor(props)
-  {
+  constructor(props) {
       super(props)
+  }
+
+  onBarCodeRead = (scan) => {
+    this.props.navigation.state.params.onNavigateBack(scan.data);
+    this.props.navigation.goBack();
   }
 
   render() {
     return (
       <RNCamera
-        onBarCodeRead={(scan) => this.props.navigation.navigate("Search", {textScan: scan.data})}
+        onBarCodeRead={this.onBarCodeRead}
         style={[StyleSheet.absoluteFill, styles.container]}
         captureAudio={false}
       >

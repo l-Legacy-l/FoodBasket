@@ -12,7 +12,8 @@ class Search extends React.Component
 
         this.state = {
             food:[],
-            showButtonAdd: false
+            showButtonAdd: false,
+            textScan: '',
         }
 
         this.searchedText="";
@@ -36,6 +37,17 @@ class Search extends React.Component
         })
     }
 
+    handleOnNavigateBack = (textScan) => {
+        this.setState({
+            textScan
+        })
+
+        if(textScan != "Default") {
+            this.searchedText = textScan;
+            this._loadFood();
+        }
+    }
+
     _searchTextInputChanged(text) {
         this.searchedText = text;
     }
@@ -43,13 +55,7 @@ class Search extends React.Component
     render() {
         
         const { navigation } = this.props;
-        const textScan = navigation.getParam("textScan","Default");
-        console.log(textScan);
 
-        if(textScan != "Default") {
-            this.searchedText = textScan;
-            this._loadFood();
-        }
 
         return(
             <View style={styles.mainContainer}>
@@ -58,7 +64,7 @@ class Search extends React.Component
                 </TextInput>
   
                 <Button style={{height: 100}} title="Search" onPress={()=>{this._loadFood()}} ></Button>
-                <Button style={{height: 400}} title="Ouvrir la caméra" onPress={() => {this.props.navigation.navigate("Camera")}}></Button>
+                <Button style={{height: 400}} title="Ouvrir la caméra" onPress={() => {this.props.navigation.navigate('Camera', {onNavigateBack: this.handleOnNavigateBack})}}></Button>
 
                 {
                    this.state.showButtonAdd ? 
