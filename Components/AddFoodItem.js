@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Button } from 'react-native';
 import t from 'tcomb-form-native';
-import ImageFactory from 'react-native-image-picker-form'
+import ImageFactory from 'react-native-image-picker-form';
+import Toast from 'react-native-simple-toast';
 
 const Form = t.form.Form;
 
 const FoodItem = t.struct({
   Titre: t.String,
   Code: t.String,
-  Image: t.String
+  Image: t.String,
 });
 
 const formStyles = {
@@ -43,6 +44,7 @@ const options = {
       error: 'Le titre du produit est vide',
     },
     Code: {
+      editable: false,
       placeholder: '123456789',
     },
     Image: {
@@ -62,16 +64,26 @@ const options = {
 };
 
 export default class AddFoodItem extends Component {
+      constructor(props) {
+        super(props);
+        console.log('je passe scan text ' + this.props.navigation.state.params.textScan)
+        this.value = {
+          Code: this.props.navigation.state.params.textScan,
+        };
+    }
   handleSubmit = () => {
     const value = this._form.getValue();
-    console.log('value: ', value);
-  };
+    // Check if the form is fill
+    if(value !== null) {
+      console.log(value);
+    }
+  }
 
   render() {
     return (
       <View>
         <View style={styles.container}>
-          <Form ref={c => (this._form = c)} type={FoodItem} options={options} />
+          <Form ref={c => (this._form = c)} type={FoodItem} options={options} value={this.value} />
         </View>
 
         <View style={{padding: 20}}>

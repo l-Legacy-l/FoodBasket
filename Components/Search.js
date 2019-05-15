@@ -33,6 +33,7 @@ class Search extends React.Component
                     showButtonAdd: true,
                     food: []
                 })
+
             }
         })
     }
@@ -42,8 +43,9 @@ class Search extends React.Component
             textScan
         })
 
+        this.searchedText = textScan;
+
         if(textScan != "Default") {
-            this.searchedText = textScan;
             this._loadFood();
         }
     }
@@ -71,7 +73,7 @@ class Search extends React.Component
                     <Button 
                         style={{height: 400}} 
                         title="Ajouter dans la base de données" 
-                        onPress={() => {this.props.navigation.navigate("AddFoodItem")}}>
+                        onPress={() => {this.props.navigation.navigate("AddFoodItem", {textScan: this.searchedText})}}>
                     </Button> 
                 : null}
             
