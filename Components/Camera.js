@@ -1,17 +1,50 @@
 import React from 'react';
-import {StyleSheet, View } from 'react-native';
-import  { RNCamera }  from 'react-native-camera';
+import { StyleSheet, View } from 'react-native';
+import { RNCamera } from 'react-native-camera';
 
+const opacity = 'rgba(0, 0, 0, .6)';
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  layerTop: {
+    flex: 2,
+    backgroundColor: opacity,
+  },
+  layerCenter: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  layerLeft: {
+    flex: 1,
+    backgroundColor: opacity,
+  },
+  focused: {
+    flex: 10,
+  },
+  layerRight: {
+    flex: 1,
+    backgroundColor: opacity,
+  },
+  layerBottom: {
+    flex: 2,
+    backgroundColor: opacity,
+  },
+});
 
 export default class Camera extends React.Component {
-
   constructor(props) {
-      super(props)
+    super(props);
+    this.isBarCodeRead = false;
   }
 
   onBarCodeRead = (scan) => {
-    this.props.navigation.state.params.onNavigateBack(scan.data);
-    this.props.navigation.goBack();
+    if (!this.isBarCodeRead) {
+      this.props.navigation.state.params.onNavigateBack(scan.data);
+      this.props.navigation.goBack();
+      this.isBarCodeRead = true;
+    }
   }
 
   render() {
@@ -32,34 +65,3 @@ export default class Camera extends React.Component {
     );
   }
 }
-
-const opacity = 'rgba(0, 0, 0, .6)';
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column'
-  },
-  layerTop: {
-    flex: 2,
-    backgroundColor: opacity
-  },
-  layerCenter: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  layerLeft: {
-    flex: 1,
-    backgroundColor: opacity
-  },
-  focused: {
-    flex: 10
-  },
-  layerRight: {
-    flex: 1,
-    backgroundColor: opacity
-  },
-  layerBottom: {
-    flex: 2,
-    backgroundColor: opacity
-  },
-});

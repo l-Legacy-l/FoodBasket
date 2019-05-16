@@ -1,10 +1,10 @@
+/* eslint-disable no-return-assign */
 import React, { Component } from 'react';
 import { StyleSheet, View, Button } from 'react-native';
 import t from 'tcomb-form-native';
 import ImageFactory from 'react-native-image-picker-form';
-import Toast from 'react-native-simple-toast';
 
-const Form = t.form.Form;
+const { Form } = t.form;
 
 const FoodItem = t.struct({
   Titre: t.String,
@@ -48,33 +48,41 @@ const options = {
       placeholder: '123456789',
     },
     Image: {
-    config: {
-      title: 'Selectionner une image',
-      options: ['Ouvrir la caméra', 'Selectionner depuis la gallerie', 'Annuler'],
-      // Used on Android to style BottomSheet
-      style: {
-        titleFontFamily: 'Roboto'
-      }
+      config: {
+        title: 'Selectionner une image',
+        options: ['Ouvrir la caméra', 'Selectionner depuis la gallerie', 'Annuler'],
+        // Used on Android to style BottomSheet
+        style: {
+          titleFontFamily: 'Roboto',
+        },
+      },
+      error: "Pas d'image fournie",
+      factory: ImageFactory,
     },
-    error: "Pas d'image fournie",
-    factory: ImageFactory
-    }
   },
   stylesheet: formStyles,
 };
 
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    marginTop: 15,
+    padding: 20,
+  },
+});
+
 export default class AddFoodItem extends Component {
-      constructor(props) {
-        super(props);
-        console.log('je passe scan text ' + this.props.navigation.state.params.textScan)
-        this.value = {
-          Code: this.props.navigation.state.params.textScan,
-        };
-    }
+  constructor(props) {
+    super(props);
+    this.value = {
+      Code: this.props.navigation.state.params.textScan,
+    };
+  }
+
   handleSubmit = () => {
     const value = this._form.getValue();
     // Check if the form is fill
-    if(value !== null) {
+    if (value !== null) {
       console.log(value);
     }
   }
@@ -86,18 +94,10 @@ export default class AddFoodItem extends Component {
           <Form ref={c => (this._form = c)} type={FoodItem} options={options} value={this.value} />
         </View>
 
-        <View style={{padding: 20}}>
-          <Button style={{marginTop: 10}} title="Envoyer" onPress={this.handleSubmit} />
+        <View style={{ padding: 20 }}>
+          <Button style={{ marginTop: 10 }} title="Envoyer" onPress={this.handleSubmit} />
         </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    marginTop: 15,
-    padding: 20,
-  },
-});
