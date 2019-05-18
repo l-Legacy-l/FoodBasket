@@ -30,35 +30,30 @@ const styles = StyleSheet.create(
 );
 
 class Search extends React.Component {
-  // On définit les propriétés dans le constructeur du component
   constructor(props) {
     super(props);
 
     this.state = {
       food: [],
       showButtonAdd: false,
-      textScan: '',
+      textToScan: '',
     };
-
-    this.searchedText = '';
   }
 
-    handleOnNavigateBack = (textScan) => {
+    handleOnNavigateBack = (textToScan) => {
       this.setState({
-        textScan,
+        textToScan,
+      }, () => {
+        if (textToScan !== 'Default') {
+          this._loadFood();
+        }
       });
-
-      this.searchedText = textScan;
-
-      if (textScan !== 'Default') {
-        this._loadFood();
-      }
     }
 
     _loadFood() {
-      getFoodFromApi(this.searchedText).then((data) => {
+      getFoodFromApi(this.state.textToScan).then((data) => {
         // eslint-disable-next-line no-restricted-globals
-        if (data.status === 1 && !isNaN(this.searchedText)) {
+        if (data.status === 1 && !isNaN(this.state.textToScan)) {
           this.setState({
             food: data.product,
             showButtonAdd: false,
@@ -74,7 +69,7 @@ class Search extends React.Component {
     }
 
     _searchTextInputChanged(text) {
-      this.searchedText = text;
+      this.setState({ textToScan: text });
     }
 
     render() {
@@ -85,6 +80,7 @@ class Search extends React.Component {
             style={styles.textInput}
             placeholder="Insere the food's barcode"
             onChangeText={text => this._searchTextInputChanged(text)}
+            value={this.state.textToScan}
           />
 
           <Button
@@ -104,7 +100,7 @@ class Search extends React.Component {
                 <Button
                   style={{ height: 400 }}
                   title="Ajouter dans la base de données"
-                  onPress={() => { navigation.navigate('AddFoodItem', { textScan: this.searchedText }); }}
+                  onPress={() => { navigation.navigate('AddFoodItem', { textToScan: this.state.textToScan }); }}
                 />
               )
               : null}
