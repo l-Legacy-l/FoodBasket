@@ -1,8 +1,11 @@
 /* eslint-disable no-return-assign */
 import React, { Component } from 'react';
-import { StyleSheet, View, Button } from 'react-native';
+import {
+  StyleSheet, View, Button,
+} from 'react-native';
 import t from 'tcomb-form-native';
 import ImageFactory from 'react-native-image-picker-form';
+import { writeFoodDataToApi, writeFoodDataToApiWithImage } from '../API/OFFApi';
 
 const { Form } = t.form;
 
@@ -62,7 +65,6 @@ const options = {
   },
   stylesheet: formStyles,
 };
-
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
@@ -83,7 +85,10 @@ export default class AddFoodItem extends Component {
     const value = this._form.getValue();
     // Check if the form is fill
     if (value !== null) {
-      console.log(value);
+      // TODO Loading + Toast
+      writeFoodDataToApi(value.Code, value.Titre).then(
+        () => writeFoodDataToApiWithImage(value.Image, value.Code).then(res => console.log(`je passe add image ${JSON.stringify(res)}`)),
+      );
     }
   }
 
@@ -97,6 +102,7 @@ export default class AddFoodItem extends Component {
         <View style={{ padding: 20 }}>
           <Button style={{ marginTop: 10 }} title="Envoyer" onPress={this.handleSubmit} />
         </View>
+
       </View>
     );
   }
