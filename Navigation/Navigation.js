@@ -13,17 +13,35 @@ const SearchStackNavigator = createStackNavigator({
     },
   },
 
-  Camera: {
-    screen: Camera,
-  },
-
   AddFoodItem: {
     screen: AddFoodItem,
     navigationOptions: {
       title: 'Ajouter un produit',
     },
   },
+
+  Camera: {
+    screen: Camera,
+    navigationOptions: {
+      tabBarVisible: false,
+    },
+  },
+
+
 });
+
+SearchStackNavigator.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+
+  const nextView = navigation.state.routes;
+  if (nextView[1] !== undefined && nextView[1].routeName === 'Camera') {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
 
 const MyBasketStackNavigator = createStackNavigator({
   MyBasket: {
