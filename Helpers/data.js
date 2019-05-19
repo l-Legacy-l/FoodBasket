@@ -1,9 +1,15 @@
-export default data = [
+// eslint-disable-next-line no-undef
+export default foods = [
   {
-    imageFront: 'https://static.openfoodfacts.org/images/products/302/933/000/3533/front_fr.96.400.jpg',
-    title: 'Biscuit',
-    code: '123456789',
-    ingredients: ['farine', 'blé'],
-    imageBack: 'https://static.openfoodfacts.org/images/products/302/933/000/3533/nutrition_fr.101.400.jpg',
+    barcode: '0123456789',
+    name: 'Cristaline',
+    image: 'https://static.openfoodfacts.org/images/products/326/884/000/1008/front_fr.233.400.jpg',
+    quantity: 3,
+  },
+  {
+    barcode: '0123456781',
+    name: 'Biscuit',
+    image: 'https://static.openfoodfacts.org/images/products/326/884/000/1008/front_fr.233.400.jpg',
+    quantity: 1,
   },
 ];

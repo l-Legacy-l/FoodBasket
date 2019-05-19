@@ -1,18 +1,36 @@
-import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import React, { PureComponent } from 'react';
+import { ScrollView } from 'react-native';
+import { ListItem } from 'react-native-elements';
+import foods from '../Helpers/data';
 
-export default class MyBasket extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
-
+export default class MyBasket extends PureComponent {
   render() {
     return (
-      <View>
-        <Text> textInComponent </Text>
-      </View>
+      <ScrollView>
+        {
+          foods.map(item => (
+            <ListItem
+              key={item.barcode}
+              title={item.name}
+              titleStyle={{ fontSize: 22 }}
+              leftAvatar={{
+                source: { uri: item.image },
+                size: 'large',
+                rounded: false,
+                avatarStyle: { borderRadius: 20 },
+                overlayContainerStyle: { backgroundColor: 'transparent' },
+
+              }}
+              subtitle={item.barcode}
+              subtitleStyle={{ marginTop: 10 }}
+              badge={{ value: item.quantity, badgeStyle: { backgroundColor: '#517fa4', width: 40, height: 25 }, textStyle: { fontSize: 18 } }}
+              chevron
+              bottomDivider
+              onPress={() => console.log('press')}
+            />
+          ))
+        }
+      </ScrollView>
     );
   }
 }
