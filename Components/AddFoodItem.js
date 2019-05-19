@@ -77,7 +77,7 @@ export default class AddFoodItem extends Component {
   constructor(props) {
     super(props);
     this.value = {
-      Code: this.props.navigation.state.params.textScan,
+      Code: this.props.navigation.state.params.textToScan,
     };
   }
 
