@@ -36,6 +36,7 @@ class Search extends React.Component {
     this.state = {
       food: [],
       showButtonAdd: false,
+      showFood: false,
       textToScan: '',
     };
   }
@@ -56,12 +57,14 @@ class Search extends React.Component {
         if (data.status === 1 && !isNaN(this.state.textToScan)) {
           this.setState({
             food: data.product,
+            showFood: true,
             showButtonAdd: false,
           });
         } else {
           Toast.show('Le code barre ne renvoie vers aucun produit');
           this.setState({
             showButtonAdd: true,
+            showFood: false,
             food: [],
           });
         }
@@ -104,8 +107,12 @@ class Search extends React.Component {
                 />
               )
               : null}
+          {this.state.showFood
+            ? <FoodItem food={this.state.food} />
+            : <View />
 
-          <FoodItem food={this.state.food} />
+          }
+
         </View>
       );
     }
