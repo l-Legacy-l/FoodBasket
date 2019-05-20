@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import DialogInput from 'react-native-dialog-input';
+import _ from 'lodash';
 
 
 const styles = StyleSheet.create(
@@ -64,18 +65,32 @@ class FoodItem extends React.Component {
   }
 
   sendInput = (inputText, operation) => {
-    const { food } = this.props;
-    const foodList = [];
+    const { food, screenProps } = this.props;
+    const { foodList } = screenProps;
+    const foodListTemp = screenProps.foodList;
     const foodItem = {};
-    foodItem.barcode = food.code;
-    foodItem.name = food.product_name_fr;
-    foodItem.image = food.image_front_url;
-    foodItem.quantity = inputText;
-    foodList.push(foodItem);
+    const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
 
-    console.log(`je passe foodlist ${this.props.screenProps}`);
-    this.props.screenProps.updateFoodList(foodList);
-    this.setState({ isAddDialogVisible: false });
+
+    // Check if there is already this product in the list
+    if (foodListItemIndex !== -1) {
+      // eslint-disable-next-line radix
+      const quantity = parseInt(foodList[foodListItemIndex].quantity) + parseInt(inputText);
+      foodListTemp[foodListItemIndex].quantity = quantity;
+
+      screenProps.updateFoodList(foodListTemp);
+      this.setState({ isAddDialogVisible: false });
+    } else {
+      foodItem.barcode = food.code;
+      foodItem.name = food.product_name_fr;
+      foodItem.image = food.image_front_url;
+      foodItem.quantity = inputText;
+
+      foodListTemp.push(foodItem);
+
+      screenProps.updateFoodList(foodListTemp);
+      this.setState({ isAddDialogVisible: false });
+    }
   }
 
   render() {
