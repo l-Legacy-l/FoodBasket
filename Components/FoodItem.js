@@ -9,36 +9,30 @@ import DialogInput from 'react-native-dialog-input';
 
 const styles = StyleSheet.create(
   {
-    mainContainer:
-    {
+    mainContainer: {
       height: 250,
       flexDirection: 'row',
     },
-    image:
-    {
+    image: {
       width: 170,
       height: 250,
       margin: 5,
       resizeMode: 'cover',
       backgroundColor: 'white',
     },
-    contentContainer:
-    {
+    contentContainer: {
       flex: 1,
       margin: 5,
     },
-    contentHeader:
-    {
+    contentHeader: {
       flex: 1,
       width: 180,
     },
-    contentBarcode:
-    {
+    contentBarcode: {
       flex: 1,
       width: 180,
     },
-    titleText:
-    {
+    titleText: {
       fontWeight: 'bold',
       fontSize: 22,
       flex: 1,
@@ -46,14 +40,12 @@ const styles = StyleSheet.create(
       paddingRight: 5,
       textAlign: 'center',
     },
-    barcodeText:
-    {
+    barcodeText: {
       fontStyle: 'italic',
       fontSize: 16,
       textAlign: 'center',
     },
-    contentIcons:
-    {
+    contentIcons: {
       flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -69,6 +61,21 @@ class FoodItem extends React.Component {
       isRemoveDialogVisible: false,
       isAddDialogVisible: false,
     };
+  }
+
+  sendInput = (inputText, operation) => {
+    const { food } = this.props;
+    const foodList = [];
+    const foodItem = {};
+    foodItem.barcode = food.code;
+    foodItem.name = food.product_name_fr;
+    foodItem.image = food.image_front_url;
+    foodItem.quantity = inputText;
+    foodList.push(foodItem);
+
+    console.log(`je passe foodlist ${this.props.screenProps}`);
+    this.props.screenProps.updateFoodList(foodList);
+    this.setState({ isAddDialogVisible: false });
   }
 
   render() {
@@ -108,7 +115,6 @@ class FoodItem extends React.Component {
                     [
                       {
                         text: 'Non',
-                        onPress: () => console.log('Cancel Pressed'),
                         style: 'cancel',
                       },
                       { text: 'Oui', onPress: () => console.log('OK Pressed') },
@@ -147,8 +153,8 @@ class FoodItem extends React.Component {
             submitText="Supprimer"
             cancelText="Annuler"
             textInputProps={{ keyboardType: 'numeric' }}
-            submitInput={(inputText) => { this.sendInput(inputText); }}
-            closeDialog={() => { this.setState({ isRemoveDialogVisible: false }); }}
+            submitInput={inputText => this.sendInput(inputText, 'delete')}
+            closeDialog={() => this.setState({ isRemoveDialogVisible: false })}
           />
 
           <DialogInput
@@ -158,8 +164,8 @@ class FoodItem extends React.Component {
             submitText="Ajouter"
             cancelText="Annuler"
             textInputProps={{ keyboardType: 'numeric' }}
-            submitInput={(inputText) => { this.sendInput(inputText); }}
-            closeDialog={() => { this.setState({ isAddDialogVisible: false }); }}
+            submitInput={inputText => this.sendInput(inputText, 'add')}
+            closeDialog={() => this.setState({ isAddDialogVisible: false })}
           />
         </View>
       </TouchableHighlight>

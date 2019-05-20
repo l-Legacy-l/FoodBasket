@@ -108,11 +108,10 @@ class Search extends React.Component {
               )
               : null}
           {this.state.showFood
-            ? <FoodItem food={this.state.food} />
+            ? <FoodItem food={this.state.food} screenProps={this.props.screenProps} />
             : <View />
 
           }
-
         </View>
       );
     }

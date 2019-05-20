@@ -1,14 +1,13 @@
 import React, { PureComponent } from 'react';
 import { ScrollView } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import foods from '../Helpers/data';
 
 export default class MyBasket extends PureComponent {
   render() {
     return (
       <ScrollView>
         {
-          foods.map(item => (
+          this.props.screenProps.foodList.map(item => (
             <ListItem
               key={item.barcode}
               title={item.name}
