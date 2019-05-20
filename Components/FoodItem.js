@@ -78,21 +78,33 @@ class FoodItem extends React.Component {
 
   sendInput = (inputText, operation) => {
     const { food, screenProps } = this.props;
-    const { foodList } = screenProps;
     const foodListTemp = screenProps.foodList;
-    const foodItem = {};
     const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
-
 
     // Check if there is already this product in the list
     if (foodListItemIndex !== -1) {
       // eslint-disable-next-line radix
-      const quantity = parseInt(foodList[foodListItemIndex].quantity) + parseInt(inputText);
-      foodListTemp[foodListItemIndex].quantity = quantity;
+      let quantity = parseInt(foodListTemp[foodListItemIndex].quantity);
+      if (operation === 'add') {
+        // eslint-disable-next-line radix
+        quantity += parseInt(inputText);
+        foodListTemp[foodListItemIndex].quantity = quantity;
+      } else {
+        // eslint-disable-next-line radix
+        quantity -= parseInt(inputText);
+        if (quantity <= 0) {
+          // delete the food object of the foodList array
+          foodListTemp.splice(foodListItemIndex, 1);
+        } else {
+          foodListTemp[foodListItemIndex].quantity = quantity;
+        }
+      }
 
       screenProps.updateFoodList(foodListTemp);
-      this.setState({ isAddDialogVisible: false });
+      this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
     } else {
+      const foodItem = {};
+
       foodItem.barcode = food.code;
       foodItem.name = food.product_name_fr;
       foodItem.image = food.image_front_url;
@@ -147,7 +159,15 @@ class FoodItem extends React.Component {
                               text: 'Non',
                               style: 'cancel',
                             },
-                            { text: 'Oui', onPress: () => console.log('OK Pressed') },
+                            {
+                              text: 'Oui',
+                              onPress: () => {
+                                const foodListTemp = screenProps.foodList;
+                                const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
+                                foodListTemp.splice(foodListItemIndex, 1);
+                                screenProps.updateFoodList(foodListTemp);
+                              },
+                            },
                           ],
                           { cancelable: true },
                         );
