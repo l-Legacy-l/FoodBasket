@@ -1,9 +1,11 @@
 import React from 'react';
 import {
-  StyleSheet, View, Text, Image, TouchableHighlight
+  StyleSheet, View, Text, Image, TouchableHighlight, Alert
   ,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import DialogInput from 'react-native-dialog-input';
+
 
 const styles = StyleSheet.create(
   {
@@ -60,7 +62,15 @@ const styles = StyleSheet.create(
   },
 );
 
-class FoodItem extends React.PureComponent {
+class FoodItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isRemoveDialogVisible: false,
+      isAddDialogVisible: false,
+    };
+  }
+
   render() {
     const { food } = this.props;
     return (
@@ -88,23 +98,69 @@ class FoodItem extends React.PureComponent {
               <Icon
                 reverse
                 name="delete"
-                type="material"
+                type="material-community"
                 color="#517fa4"
-                size={22}
-                onPress={() => console.log('hello')}
+                size={20}
+                onPress={() => {
+                  Alert.alert(
+                    'Confirmation de suppression',
+                    'Voulez-vous supprimer ce produit de votre liste ?',
+                    [
+                      {
+                        text: 'Non',
+                        onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel',
+                      },
+                      { text: 'Oui', onPress: () => console.log('OK Pressed') },
+                    ],
+                    { cancelable: true },
+                  );
+                }}
               />
-
               <Icon
                 reverse
-                name="playlist-add"
-                type="material"
+                name="playlist-minus"
+                type="material-community"
                 color="#517fa4"
-                size={22}
-                onPress={() => console.log('hello')}
+                size={20}
+                onPress={() => {
+                  this.setState({ isRemoveDialogVisible: true });
+                }}
+              />
+              <Icon
+                reverse
+                name="playlist-plus"
+                type="material-community"
+                color="#517fa4"
+                size={20}
+                onPress={() => {
+                  this.setState({ isAddDialogVisible: true });
+                }}
               />
 
             </View>
           </View>
+          <DialogInput
+            isDialogVisible={this.state.isRemoveDialogVisible}
+            title="Quantité à supprimer"
+            message="Entrer la quantité du produit à supprimer de la liste"
+            submitText="Supprimer"
+            cancelText="Annuler"
+            textInputProps={{ keyboardType: 'numeric' }}
+            submitInput={(inputText) => { this.sendInput(inputText); }}
+            closeDialog={() => { this.setState({ isRemoveDialogVisible: false }); }}
+          />
+
+          <DialogInput
+            isDialogVisible={this.state.isAddDialogVisible}
+            title="Quantité à ajouter"
+            message="Entrer la quantité du produit à ajouter à la liste"
+            submitText="Ajouter"
+            cancelText="Annuler"
+            textInputProps={{ keyboardType: 'numeric' }}
+            submitInput={(inputText) => { this.sendInput(inputText); }}
+            closeDialog={() => { this.setState({ isAddDialogVisible: false }); }}
+          />
         </View>
       </TouchableHighlight>
     );
