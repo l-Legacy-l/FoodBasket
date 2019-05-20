@@ -12,6 +12,7 @@ const styles = StyleSheet.create(
   {
     mainContainer: {
       height: 250,
+      marginTop: 5,
       flexDirection: 'row',
     },
     image: {
@@ -48,9 +49,20 @@ const styles = StyleSheet.create(
     },
     contentIcons: {
       flex: 1,
+      marginRight: 5,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+    },
+    deleteIcons: {
+      flex: 0.66,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    plusIcons: {
+      flex: 0.33,
+      justifyContent: 'flex-end',
     },
   },
 );
@@ -94,7 +106,7 @@ class FoodItem extends React.Component {
   }
 
   render() {
-    const { food } = this.props;
+    const { food, screenProps } = this.props;
     return (
       <TouchableHighlight>
         <View style={styles.mainContainer}>
@@ -117,47 +129,59 @@ class FoodItem extends React.Component {
             </View>
 
             <View style={styles.contentIcons}>
-              <Icon
-                reverse
-                name="delete"
-                type="material-community"
-                color="#517fa4"
-                size={20}
-                onPress={() => {
-                  Alert.alert(
-                    'Confirmation de suppression',
-                    'Voulez-vous supprimer ce produit de votre liste ?',
-                    [
-                      {
-                        text: 'Non',
-                        style: 'cancel',
-                      },
-                      { text: 'Oui', onPress: () => console.log('OK Pressed') },
-                    ],
-                    { cancelable: true },
-                  );
-                }}
-              />
-              <Icon
-                reverse
-                name="playlist-minus"
-                type="material-community"
-                color="#517fa4"
-                size={20}
-                onPress={() => {
-                  this.setState({ isRemoveDialogVisible: true });
-                }}
-              />
-              <Icon
-                reverse
-                name="playlist-plus"
-                type="material-community"
-                color="#517fa4"
-                size={20}
-                onPress={() => {
-                  this.setState({ isAddDialogVisible: true });
-                }}
-              />
+              {_.find(screenProps.foodList, foodListItem => foodListItem.barcode === food.code)
+                ? (
+                  <View style={styles.deleteIcons}>
+                    <Icon
+                      reverse
+                      name="delete"
+                      type="material-community"
+                      color="#517fa4"
+                      size={20}
+                      onPress={() => {
+                        Alert.alert(
+                          'Confirmation de suppression',
+                          'Voulez-vous supprimer ce produit de votre liste ?',
+                          [
+                            {
+                              text: 'Non',
+                              style: 'cancel',
+                            },
+                            { text: 'Oui', onPress: () => console.log('OK Pressed') },
+                          ],
+                          { cancelable: true },
+                        );
+                      }}
+                    />
+                    <Icon
+                      reverse
+                      name="playlist-minus"
+                      type="material-community"
+                      color="#517fa4"
+                      size={20}
+                      onPress={() => {
+                        this.setState({ isRemoveDialogVisible: true });
+                      }}
+                    />
+                  </View>
+                )
+
+
+                : <View />
+            }
+              <View style={styles.plusIcons}>
+
+                <Icon
+                  reverse
+                  name="playlist-plus"
+                  type="material-community"
+                  color="#517fa4"
+                  size={20}
+                  onPress={() => {
+                    this.setState({ isAddDialogVisible: true });
+                  }}
+                />
+              </View>
 
             </View>
           </View>
