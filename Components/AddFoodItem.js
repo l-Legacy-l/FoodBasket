@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import t from 'tcomb-form-native';
 import ImageFactory from 'react-native-image-picker-form';
+import Toast from 'react-native-simple-toast';
 import { writeFoodDataToApi, writeFoodDataToApiWithImage } from '../API/OFFApi';
 
 const { Form } = t.form;
@@ -87,7 +88,12 @@ export default class AddFoodItem extends Component {
     if (value !== null) {
       // TODO Loading + Toast
       writeFoodDataToApi(value.Code, value.Titre).then(
-        () => writeFoodDataToApiWithImage(value.Image, value.Code).then(res => console.log(`je passe add image ${JSON.stringify(res)}`)),
+        () => writeFoodDataToApiWithImage(value.Image, value.Code).then((res) => {
+          if (res.status === 200) {
+            Toast.show('Le produit a bien été sauvegardé');
+          }
+          console.log(`je passe add image ${JSON.stringify(res)}`);
+        }),
       );
     }
   }

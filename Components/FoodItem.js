@@ -6,6 +6,7 @@ import {
 import { Icon } from 'react-native-elements';
 import DialogInput from 'react-native-dialog-input';
 import _ from 'lodash';
+import Toast from 'react-native-simple-toast';
 
 
 const styles = StyleSheet.create(
@@ -77,43 +78,56 @@ class FoodItem extends React.Component {
   }
 
   sendInput = (inputText, operation) => {
-    const { food, screenProps } = this.props;
-    const foodListTemp = screenProps.foodList;
-    const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
+    // eslint-disable-next-line radix
+    const inputNumber = parseInt(inputText);
 
-    // Check if there is already this product in the list
-    if (foodListItemIndex !== -1) {
+    // Check if inputText is a valid number
+    if (!Number.isNaN(inputNumber) && inputNumber >= 1 && inputNumber <= 20) {
+      const { food, screenProps } = this.props;
+      let foodName = '';
+      foodName = food.product_name_fr !== undefined ? food.product_name_fr : '';
+      const foodListTemp = screenProps.foodList;
+      const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
+
+      // Check if there is already this product in the list
+      if (foodListItemIndex !== -1) {
       // eslint-disable-next-line radix
-      let quantity = parseInt(foodListTemp[foodListItemIndex].quantity);
-      if (operation === 'add') {
+        let quantity = parseInt(foodListTemp[foodListItemIndex].quantity);
+        if (operation === 'add') {
         // eslint-disable-next-line radix
-        quantity += parseInt(inputText);
-        foodListTemp[foodListItemIndex].quantity = quantity;
-      } else {
-        // eslint-disable-next-line radix
-        quantity -= parseInt(inputText);
-        if (quantity <= 0) {
-          // delete the food object of the foodList array
-          foodListTemp.splice(foodListItemIndex, 1);
-        } else {
+          quantity += inputNumber;
           foodListTemp[foodListItemIndex].quantity = quantity;
+        } else {
+        // eslint-disable-next-line radix
+          quantity -= inputNumber;
+          if (quantity <= 0) {
+          // delete the food object of the foodList array
+            foodListTemp.splice(foodListItemIndex, 1);
+          } else {
+            foodListTemp[foodListItemIndex].quantity = quantity;
+          }
         }
+
+        screenProps.updateFoodList(foodListTemp);
+        this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
+        Toast.show(`La quantité de ${foodName} a bien été modifée`);
+      } else {
+        const foodItem = {};
+
+        foodItem.barcode = food.code;
+        foodItem.name = food.product_name_fr;
+        foodItem.image = food.image_front_url;
+        foodItem.quantity = inputText;
+
+        foodListTemp.push(foodItem);
+
+        screenProps.updateFoodList(foodListTemp);
+        this.setState({ isAddDialogVisible: false });
+        Toast.show(`L'aliment${` ${foodName}`} a bien été ajoutée à la liste`);
       }
-
-      screenProps.updateFoodList(foodListTemp);
-      this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
     } else {
-      const foodItem = {};
-
-      foodItem.barcode = food.code;
-      foodItem.name = food.product_name_fr;
-      foodItem.image = food.image_front_url;
-      foodItem.quantity = inputText;
-
-      foodListTemp.push(foodItem);
-
-      screenProps.updateFoodList(foodListTemp);
-      this.setState({ isAddDialogVisible: false });
+      this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
+      Toast.show('Vous devez rentrer un entier valide compris entre 1 et 20');
     }
   }
 
@@ -162,10 +176,13 @@ class FoodItem extends React.Component {
                             {
                               text: 'Oui',
                               onPress: () => {
+                                let foodName = '';
+                                foodName = food.product_name_fr !== undefined ? food.product_name_fr : '';
                                 const foodListTemp = screenProps.foodList;
                                 const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
                                 foodListTemp.splice(foodListItemIndex, 1);
                                 screenProps.updateFoodList(foodListTemp);
+                                Toast.show(`Le produit ${foodName} a bien été supprimée`);
                               },
                             },
                           ],
