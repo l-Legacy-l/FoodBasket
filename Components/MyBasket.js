@@ -4,7 +4,7 @@ import { ListItem, Icon } from 'react-native-elements';
 import DialogInput from 'react-native-dialog-input';
 import Toast from 'react-native-simple-toast';
 import _ from 'lodash';
-
+import { storeData } from '../DB/DB';
 
 export default class MyBasket extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -73,13 +73,13 @@ export default class MyBasket extends Component {
 
       screenProps.updateFoodList(foodListTemp);
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
+      storeData('foodList', foodListTemp);
       Toast.show(`La quantité de ${foodName} a bien été modifée`);
     } else {
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
       Toast.show('Vous devez rentrer un entier valide compris entre 1 et 20');
     }
   }
-
 
   handleEditIcons = () => {
     if (this.state.isEditIconsVisible) {
@@ -110,7 +110,6 @@ export default class MyBasket extends Component {
                 rounded: false,
                 avatarStyle: { borderRadius: 20 },
                 overlayContainerStyle: { backgroundColor: 'transparent' },
-
               }}
               subtitle={item.barcode}
               subtitleStyle={{ marginTop: 10 }}
@@ -145,6 +144,7 @@ export default class MyBasket extends Component {
                                     const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === item.barcode);
                                     foodListTemp.splice(foodListItemIndex, 1);
                                     screenProps.updateFoodList(foodListTemp);
+                                    storeData('foodList', foodListTemp);
                                     Toast.show(`Le produit ${foodName} a bien été supprimée`);
                                   },
                                 },

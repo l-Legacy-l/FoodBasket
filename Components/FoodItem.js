@@ -1,12 +1,12 @@
 import React from 'react';
 import {
-  StyleSheet, View, Text, Image, TouchableHighlight, Alert
-  ,
+  StyleSheet, View, Text, Image, TouchableHighlight, Alert,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import DialogInput from 'react-native-dialog-input';
 import _ from 'lodash';
 import Toast from 'react-native-simple-toast';
+import { storeData } from '../DB/DB';
 
 
 const styles = StyleSheet.create(
@@ -78,8 +78,7 @@ class FoodItem extends React.Component {
   }
 
   sendInput = (inputText, operation) => {
-    // eslint-disable-next-line radix
-    const inputNumber = parseInt(inputText);
+    const inputNumber = parseInt(inputText, 10);
 
     // Check if inputText is a valid number
     if (!Number.isNaN(inputNumber) && inputNumber >= 1 && inputNumber <= 20) {
@@ -91,14 +90,11 @@ class FoodItem extends React.Component {
 
       // Check if there is already this product in the list
       if (foodListItemIndex !== -1) {
-      // eslint-disable-next-line radix
-        let quantity = parseInt(foodListTemp[foodListItemIndex].quantity);
+        let quantity = parseInt(foodListTemp[foodListItemIndex].quantity, 10);
         if (operation === 'add') {
-        // eslint-disable-next-line radix
           quantity += inputNumber;
           foodListTemp[foodListItemIndex].quantity = quantity;
         } else {
-        // eslint-disable-next-line radix
           quantity -= inputNumber;
           if (quantity <= 0) {
           // delete the food object of the foodList array
@@ -110,6 +106,7 @@ class FoodItem extends React.Component {
 
         screenProps.updateFoodList(foodListTemp);
         this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
+        storeData('foodList', foodListTemp);
         Toast.show(`La quantité de ${foodName} a bien été modifée`);
       } else {
         const foodItem = {};
@@ -123,6 +120,7 @@ class FoodItem extends React.Component {
 
         screenProps.updateFoodList(foodListTemp);
         this.setState({ isAddDialogVisible: false });
+        storeData('foodList', foodListTemp);
         Toast.show(`L'aliment${` ${foodName}`} a bien été ajoutée à la liste`);
       }
     } else {
@@ -182,6 +180,7 @@ class FoodItem extends React.Component {
                                 const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
                                 foodListTemp.splice(foodListItemIndex, 1);
                                 screenProps.updateFoodList(foodListTemp);
+                                storeData('foodList', foodListTemp);
                                 Toast.show(`Le produit ${foodName} a bien été supprimée`);
                               },
                             },
