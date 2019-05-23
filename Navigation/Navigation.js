@@ -1,5 +1,7 @@
 import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation';
 import Search from '../Components/Search';
+import FoodListSearch from '../Components/FoodListSearch';
+import ShoppingListSearch from '../Components/ShoppingListSearch';
 import Camera from '../Components/Camera';
 import AddFoodItem from '../Components/AddFoodItem';
 import MyBasket from '../Components/MyBasket';
@@ -9,7 +11,21 @@ const SearchStackNavigator = createStackNavigator({
   Search: {
     screen: Search,
     navigationOptions: {
-      title: 'Rechercher un produit',
+      header: null,
+    },
+  },
+
+  FoodListSearch: {
+    screen: FoodListSearch,
+    navigationOptions: {
+      title: 'Scanner un produit',
+    },
+  },
+
+  ShoppingListSearch: {
+    screen: ShoppingListSearch,
+    navigationOptions: {
+      title: 'Rechercher des produits',
     },
   },
 
