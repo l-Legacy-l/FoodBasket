@@ -50,7 +50,7 @@ SearchStackNavigator.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true;
 
   const nextView = navigation.state.routes;
-  if (nextView[1] !== undefined && nextView[1].routeName === 'Camera') {
+  if (nextView[2] !== undefined && nextView[2].routeName === 'Camera') {
     tabBarVisible = false;
   }
 
