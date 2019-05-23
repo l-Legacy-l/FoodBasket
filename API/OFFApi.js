@@ -26,3 +26,8 @@ export function writeFoodDataToApiWithImage(path, code) {
     },
   });
 }
+
+export function searchFoodByName(name, page) {
+  const url = `https://fr.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=image_front_url,product_name_fr,code&search_terms=${name}&page=${page}`;
+  return fetch(url).then(response => response.json()).catch(error => console.error(`je passe error${error}`));
+}
