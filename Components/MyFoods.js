@@ -94,7 +94,7 @@ export default class MyFoods extends Component {
   }
 
   render() {
-    const { screenProps } = this.props;
+    const { screenProps, navigation } = this.props;
     return (
       <View>
         <ScrollView>
@@ -185,7 +185,7 @@ export default class MyFoods extends Component {
               )}
               badge={{ value: item.quantity, badgeStyle: { backgroundColor: '#517fa4', width: 40, height: 25 }, textStyle: { fontSize: 18 } }}
 
-              onPress={() => console.log('press')}
+              onPress={() => navigation.navigate('FoodDetails')}
             />
           ))
         }
