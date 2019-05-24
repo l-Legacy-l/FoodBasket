@@ -5,6 +5,7 @@ import ShoppingListSearch from '../Components/ShoppingListSearch';
 import Camera from '../Components/Camera';
 import AddFoodItem from '../Components/AddFoodItem';
 import MyFoods from '../Components/MyFoods';
+import MyShopping from '../Components/MyShopping';
 
 const SearchStackNavigator = createStackNavigator({
   // Match the component Search (name is free)
@@ -66,6 +67,15 @@ const MyFoodsStackNavigator = createStackNavigator({
   },
 });
 
+const MyShoppingStackNavigator = createStackNavigator({
+  MyShopping: {
+    screen: MyShopping,
+    navigationOptions: {
+      title: 'Mes courses',
+    },
+  },
+});
+
 const MainTabNavigator = createBottomTabNavigator({
   Search: {
     screen: SearchStackNavigator,
@@ -73,6 +83,10 @@ const MainTabNavigator = createBottomTabNavigator({
 
   MyFoods: {
     screen: MyFoodsStackNavigator,
+  },
+
+  MyShopping: {
+    screen: MyShoppingStackNavigator,
   },
 });
 
