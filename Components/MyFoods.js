@@ -6,7 +6,7 @@ import Toast from 'react-native-simple-toast';
 import _ from 'lodash';
 import { storeData } from '../DB/DB';
 
-export default class MyBasket extends Component {
+export default class MyFoods extends Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     // Edit button is useless if there is no food

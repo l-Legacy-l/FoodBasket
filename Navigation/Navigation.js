@@ -4,7 +4,7 @@ import FoodListSearch from '../Components/FoodListSearch';
 import ShoppingListSearch from '../Components/ShoppingListSearch';
 import Camera from '../Components/Camera';
 import AddFoodItem from '../Components/AddFoodItem';
-import MyBasket from '../Components/MyBasket';
+import MyFoods from '../Components/MyFoods';
 
 const SearchStackNavigator = createStackNavigator({
   // Match the component Search (name is free)
@@ -42,8 +42,6 @@ const SearchStackNavigator = createStackNavigator({
       tabBarVisible: false,
     },
   },
-
-
 });
 
 SearchStackNavigator.navigationOptions = ({ navigation }) => {
@@ -59,9 +57,9 @@ SearchStackNavigator.navigationOptions = ({ navigation }) => {
   };
 };
 
-const MyBasketStackNavigator = createStackNavigator({
-  MyBasket: {
-    screen: MyBasket,
+const MyFoodsStackNavigator = createStackNavigator({
+  MyFoods: {
+    screen: MyFoods,
     navigationOptions: {
       title: 'Mes aliments',
     },
@@ -73,8 +71,8 @@ const MainTabNavigator = createBottomTabNavigator({
     screen: SearchStackNavigator,
   },
 
-  MyBasket: {
-    screen: MyBasketStackNavigator,
+  MyFoods: {
+    screen: MyFoodsStackNavigator,
   },
 });
 
