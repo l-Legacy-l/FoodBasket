@@ -8,15 +8,21 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       foodList: [],
+      shoppingList: [],
     };
   }
 
   componentDidMount = () => {
     getData('foodList').then(res => this.setState({ foodList: res }));
+    getData('shoppingList').then(res => this.setState({ shoppingList: res }));
   };
 
   updateFoodList = (foodList) => {
     this.setState({ foodList });
+  }
+
+  updateShoppingList = (shoppingList) => {
+    this.setState({ shoppingList });
   }
 
   render() {
@@ -25,6 +31,8 @@ export default class App extends React.Component {
         screenProps={{
           foodList: this.state.foodList,
           updateFoodList: this.updateFoodList,
+          shoppingList: this.state.shoppingList,
+          updateShoppingList: this.updateShoppingList,
         }}
       />
     );

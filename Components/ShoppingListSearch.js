@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { View, FlatList } from 'react-native';
 import { SearchBar, Icon, ListItem } from 'react-native-elements';
+import DialogInput from 'react-native-dialog-input';
+import _ from 'lodash';
+import Toast from 'react-native-simple-toast';
 import { searchFoodByName } from '../API/OFFApi';
-
+import { storeData } from '../DB/DB';
 
 export default class componentName extends Component {
   constructor(props) {
@@ -10,9 +13,11 @@ export default class componentName extends Component {
     this.state = {
       data: [],
       showLoading: false,
+      isDialogVisible: false,
     };
     this.page = 1;
     this.totalPages = 1;
+    this.food = {};
   }
 
   updateSearch = (search) => {
@@ -38,6 +43,39 @@ export default class componentName extends Component {
     }
   }
 
+  addFoodToShoppingList = (inputText) => {
+    const inputNumber = parseInt(inputText, 10);
+
+    if (!Number.isNaN(inputNumber) && inputNumber >= 1 && inputNumber <= 20) {
+      const { screenProps } = this.props;
+      const foodName = this.food.product_name_fr !== undefined ? this.food.product_name_fr : '';
+
+      const shoppingListTemp = screenProps.shoppingList;
+      const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, foodListItem => foodListItem.barcode === this.food.code);
+
+      if (shoppingListItemIndex !== -1) {
+        let quantity = parseInt(shoppingListTemp[shoppingListItemIndex].quantity, 10);
+        quantity += inputNumber;
+        shoppingListTemp[shoppingListItemIndex].quantity = quantity;
+        Toast.show(`La quantité de ${`${foodName}`} a bien été modifié dans la liste de course`);
+      } else {
+        const shoppingItem = {};
+
+        shoppingItem.barcode = this.food.code;
+        shoppingItem.name = foodName;
+        shoppingItem.image = this.food.image_front_url;
+        shoppingItem.quantity = inputText;
+
+        shoppingListTemp.push(shoppingItem);
+        Toast.show(`L'aliment ${`${foodName}`} a bien été ajoutée à la liste de course`);
+      }
+
+      screenProps.updateShoppingList(shoppingListTemp);
+      this.setState({ isDialogVisible: false });
+      storeData('shoppingList', shoppingListTemp);
+    }
+  }
+
   keyExtractor = (item, index) => index.toString()
 
   renderItem = ({ item }) => (
@@ -55,13 +93,13 @@ export default class componentName extends Component {
       bottomDivider
       rightIcon={(
         <Icon
-          reverse
           name="cart-plus"
           type="material-community"
           color="#517fa4"
-          size={16}
+          size={36}
           onPress={() => {
-            console.log('je passe icon');
+            this.setState({ isDialogVisible: true });
+            this.food = item;
           }}
         />
       )}
@@ -74,7 +112,7 @@ export default class componentName extends Component {
     return (
       <View>
         <SearchBar
-          placeholder="Entrer le nom du produit ici"
+          placeholder="Entrer le nom du produit"
           onChangeText={this.updateSearch}
           value={search}
           lightTheme
@@ -100,14 +138,21 @@ export default class componentName extends Component {
             if (this.state.data.length > 0 && this.page < this.totalPages) {
               this.setState({ showLoading: true });
               searchFoodByName(search, this.page).then((data) => {
-                // Defining the max food displayed
-                console.log(`je passe data ${JSON.stringify([...this.state.data, ...data.products])}`);
-                this.setState({ data: [...this.state.data, ...data.products] });
-
-                this.setState({ showLoading: false });
+                // eslint-disable-next-line react/no-access-state-in-setstate
+                this.setState({ data: [...this.state.data, ...data.products], showLoading: false });
               });
             }
           }}
+        />
+        <DialogInput
+          isDialogVisible={this.state.isDialogVisible}
+          title="Quantité à ajouter"
+          message="Entrer la quantité du produit à ajouter à votre liste de course"
+          submitText="Ajouter"
+          cancelText="Annuler"
+          textInputProps={{ keyboardType: 'numeric' }}
+          submitInput={inputText => this.addFoodToShoppingList(inputText)}
+          closeDialog={() => this.setState({ isDialogVisible: false })}
         />
       </View>
     );
