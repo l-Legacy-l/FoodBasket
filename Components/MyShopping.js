@@ -105,7 +105,7 @@ export default class MyShopping extends Component {
               title={item.name}
               titleStyle={{ fontSize: 20 }}
               leftAvatar={{
-                source: { uri: item.image },
+                source: { uri: item.imageFront },
                 size: 'large',
                 rounded: false,
                 avatarStyle: { borderRadius: 20 },

@@ -63,7 +63,7 @@ export default class componentName extends Component {
 
         shoppingItem.barcode = this.food.code;
         shoppingItem.name = foodName;
-        shoppingItem.image = this.food.image_front_url;
+        shoppingItem.imageFront = this.food.image_front_url;
         shoppingItem.quantity = inputText;
 
         shoppingListTemp.push(shoppingItem);

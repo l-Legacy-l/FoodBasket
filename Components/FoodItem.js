@@ -113,8 +113,15 @@ class FoodItem extends React.Component {
 
         foodItem.barcode = food.code;
         foodItem.name = food.product_name_fr;
-        foodItem.image = food.image_front_url;
+        foodItem.ingredients = food.ingredients_text_fr;
+        foodItem.nutriments = food.nutriments;
+        foodItem.brands = food.brands;
+        foodItem.productWeight = food.quantity;
         foodItem.quantity = inputText;
+
+        foodItem.imageFront = food.image_front_url;
+        foodItem.imageIngredients = food.image_ingredients_url;
+        foodItem.imageNutriments = food.image_nutrition_url;
 
         foodListTemp.push(foodItem);
 

@@ -105,7 +105,7 @@ export default class MyFoods extends Component {
               title={item.name}
               titleStyle={{ fontSize: 20 }}
               leftAvatar={{
-                source: { uri: item.image },
+                source: { uri: item.imageFront },
                 size: 'large',
                 rounded: false,
                 avatarStyle: { borderRadius: 20 },
@@ -183,9 +183,9 @@ export default class MyFoods extends Component {
 
                 </View>
               )}
-              badge={{ value: item.quantity, badgeStyle: { backgroundColor: '#517fa4', width: 40, height: 25 }, textStyle: { fontSize: 18 } }}
+              badge={{ value: `x ${item.quantity}`, badgeStyle: { backgroundColor: '#517fa4', height: 25 }, textStyle: { fontSize: 18 } }}
 
-              onPress={() => navigation.navigate('FoodDetails')}
+              onPress={() => navigation.navigate('FoodDetails', { barcode: item.barcode })}
             />
           ))
         }
