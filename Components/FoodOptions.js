@@ -173,7 +173,6 @@ export default class FoodOptions extends Component {
               format="YYYY-MM-DD"
               confirmBtnText="Confirmer"
               cancelBtnText="Annuler"
-              showIcon="false"
               customStyles={{
                 dateIcon: {
                   position: 'absolute',
