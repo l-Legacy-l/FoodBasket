@@ -87,11 +87,11 @@ export default class FoodIngredients extends Component {
               style={styles.image}
             />
           </TouchableOpacity>
-          {this.food.nutriments['nova-group'] !== undefined
+          {this.food.nutrients['nova-group'] !== undefined
             ? (
               <View style={styles.viewContainer}>
                 <Image
-                  source={images[this.food.nutriments['nova-group']].uri}
+                  source={images[this.food.nutrients['nova-group']].uri}
                   style={{
                     width: screenWidth / 4,
                     height: screenWidth / 4,
@@ -100,7 +100,7 @@ export default class FoodIngredients extends Component {
                   }}
                 />
 
-                <Text style={{ textAlign: 'center', marginTop: 15 }}>{images[this.food.nutriments['nova-group']].text}</Text>
+                <Text style={{ textAlign: 'center', marginTop: 15 }}>{images[this.food.nutrients['nova-group']].text}</Text>
               </View>
             )
 
