@@ -51,44 +51,44 @@ export default class FoodNutritions extends Component {
     };
     this.colorBadge = '';
     this.extraMessageNutrient = '';
+    // Check if the product is a drink
+    this.coeff = 1;
+    if (this.food.categorie !== 'en:beverages') {
+      this.coeff = 2;
+    }
   }
 
   evaluateNutritionColor = (nutrient, value) => {
-    // Check if the product is a drink
-    let coeff = 1;
-    if (this.food.categorie === 'Beverages') {
-      coeff = 2;
-    }
-
+    console.log(`je passe ${nutrient} ${value}`);
     if (nutrient === 'Matières grasses') {
-      if (value >= 10 * coeff) {
+      if (value >= 10 * this.coeff) {
         this.colorBadge = 'red';
-      } else if (value >= 1.5 * coeff) {
+      } else if (value >= 1.5 * this.coeff) {
         this.colorBadge = 'orange';
       } else {
         this.colorBadge = 'green';
       }
     } else if (nutrient === 'Graisses saturées') {
-      if (value >= 2.5 * coeff) {
+      if (value >= 2.5 * this.coeff) {
         this.colorBadge = 'red';
-      } else if (value >= 0.75 * coeff) {
+      } else if (value >= 0.75 * this.coeff) {
         this.colorBadge = 'orange';
       } else {
         this.colorBadge = 'green';
       }
     } else if (nutrient === 'Sucres') {
-      if (value >= 6.25 * coeff) {
+      if (value >= 6.25 * this.coeff) {
         this.colorBadge = 'red';
-      } else if (value >= 2.5 * coeff) {
+      } else if (value >= 2.5 * this.coeff) {
         this.colorBadge = 'orange';
       } else {
         this.colorBadge = 'green';
       }
     } else {
-      if (value >= 0.75 * coeff) {
+      if (value >= 0.75 * this.coeff) {
         this.colorBadge = 'red';
       }
-      if (value >= 0.15 * coeff) {
+      if (value >= 0.15 * this.coeff) {
         this.colorBadge = 'orange';
       } else {
         this.colorBadge = 'green';
@@ -202,7 +202,7 @@ export default class FoodNutritions extends Component {
                 }}
                 >
 
-                  <View style={[styles.nutritionColor, { backgroundColor: this.evaluateNutritionColor('Graisses saturées', this.food.nutrients.fat_100g) }]} />
+                  <View style={[styles.nutritionColor, { backgroundColor: this.evaluateNutritionColor('Graisses saturées', this.food.nutrients['saturated-fat_100g']) }]} />
 
                   <Text style={styles.textNutrition}>
                     {this.food.nutrients['saturated-fat_100g']}
@@ -217,7 +217,7 @@ export default class FoodNutritions extends Component {
                   </Text>
                 </View>
                 <View style={styles.viewNutrition}>
-                  <View style={[styles.nutritionColor, { backgroundColor: this.evaluateNutritionColor('Sucres', this.food.nutrients.fat_100g) }]} />
+                  <View style={[styles.nutritionColor, { backgroundColor: this.evaluateNutritionColor('Sucres', this.food.nutrients.sugars_100g) }]} />
 
                   <Text style={styles.textNutrition}>
                     {this.food.nutrients.sugars_100g}
@@ -233,7 +233,7 @@ export default class FoodNutritions extends Component {
                 </View>
 
                 <View style={styles.viewNutrition}>
-                  <View style={[styles.nutritionColor, { backgroundColor: this.evaluateNutritionColor('Sel', this.food.nutrients.fat_100g) }]} />
+                  <View style={[styles.nutritionColor, { backgroundColor: this.evaluateNutritionColor('Sel', this.food.nutrients.salt_100g) }]} />
 
                   <Text style={styles.textNutrition}>
                     {this.food.nutrients.salt_100g}
