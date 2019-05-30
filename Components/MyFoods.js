@@ -44,42 +44,55 @@ export default class MyFoods extends Component {
     });
   }
 
-
   sendInput = (inputText, operation) => {
     const inputNumber = parseInt(inputText, 10);
 
     // Check if inputText is a valid number
     if (!Number.isNaN(inputNumber) && inputNumber >= 1 && inputNumber <= 20) {
       const { screenProps } = this.props;
-      let foodName = '';
-      foodName = this.foodListItem.name !== undefined ? this.foodListItem.name : '';
+      const foodName = this.foodListItem.name !== undefined ? this.foodListItem.name : '';
       const foodListTemp = screenProps.foodList;
       const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.foodListItem.barcode);
-
-      let quantity = parseInt(foodListTemp[foodListItemIndex].quantity, 10);
-
+      const food = foodListTemp[foodListItemIndex];
+      let quantity = parseInt(food.quantity, 10);
       if (operation === 'add') {
         quantity += inputNumber;
-        foodListTemp[foodListItemIndex].quantity = quantity;
+        food.quantity = quantity;
       } else {
         quantity -= inputNumber;
         if (quantity <= 0) {
           // delete the food object of the foodList array
           foodListTemp.splice(foodListItemIndex, 1);
         } else {
-          foodListTemp[foodListItemIndex].quantity = quantity;
+          food.quantity = quantity;
         }
       }
 
-      screenProps.updateFoodList(foodListTemp);
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
+      screenProps.updateFoodList(foodListTemp);
       storeData('foodList', foodListTemp);
       Toast.show(`La quantité de ${foodName} a bien été modifée`);
+      // Check if the quantity has reach the limit
+      if (quantity <= parseInt(food.minQuantity, 10)) {
+        this.addFoodToShoppingList();
+      }
     } else {
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
       Toast.show('Vous devez rentrer un entier valide compris entre 1 et 20');
     }
   }
+
+    addFoodToShoppingList = () => {
+      const { screenProps } = this.props;
+      const shoppingListTemp = screenProps.shoppingList;
+      const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, shoppingListItem => shoppingListItem.barcode === this.foodListItem.barcode);
+      // Ignore the adding if there is already the food in the shoppingList
+      if (shoppingListItemIndex === -1) {
+        shoppingListTemp.push(this.foodListItem);
+        screenProps.updateShoppingList(shoppingListTemp);
+        storeData('shoppingList', shoppingListTemp);
+      }
+    }
 
   handleEditIcons = () => {
     if (this.state.isEditIconsVisible) {

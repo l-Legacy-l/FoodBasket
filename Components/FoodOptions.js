@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   View, Text, Modal, Image, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Alert,
 } from 'react-native';
-import { Badge, Icon } from 'react-native-elements';
+import { Badge, Icon, Input } from 'react-native-elements';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import _ from 'lodash';
 import Toast from 'react-native-simple-toast';
@@ -88,6 +88,18 @@ export default class FoodOptions extends Component {
     } else {
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
       Toast.show('Vous devez rentrer un entier valide compris entre 1 et 20');
+    }
+  }
+
+  addFoodToShoppingList = () => {
+    const { screenProps } = this.props;
+    const shoppingListTemp = screenProps.shoppingList;
+    const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, shoppingListItem => shoppingListItem.barcode === this.food.barcode);
+    // Ignore the adding if there is already the food in the shoppingList
+    if (shoppingListItemIndex === -1) {
+      shoppingListTemp.push(this.food);
+      screenProps.updateShoppingList(shoppingListTemp);
+      storeData('shoppingList', shoppingListTemp);
     }
   }
 
@@ -184,7 +196,6 @@ export default class FoodOptions extends Component {
                   marginLeft: 1,
                   marginRight: '55%',
                 },
-              // ... You can check the source to find the other keys.
               }}
               onDateChange={(date) => {
                 this.setState({ date });
@@ -241,6 +252,38 @@ export default class FoodOptions extends Component {
                 });
               }}
             />
+          </View>
+          <View style={[styles.viewContainer, { marginTop: 30, alignItems: 'center' }]}>
+            <Text style={[styles.titleText, { fontSize: 16 }]}> Quantité minimale: </Text>
+            <Input
+              placeholder="Entrer une valeur"
+              containerStyle={{
+                width: 135, height: 40, borderWidth: 1, borderColor: '#9c9c9c',
+              }}
+              placeholderTextColor="#c4c4c4"
+              inputContainerStyle={{ borderBottomWidth: 0 }}
+              inputStyle={{ fontSize: 14 }}
+              keyboardType="number-pad"
+              onSubmitEditing={(value) => {
+                const inputValue = value.nativeEvent.text;
+                if (!Number.isNaN(inputValue) && inputValue >= 1 && inputValue <= 20) {
+                  const foodListTemp = screenProps.foodList;
+                  const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
+                  foodListTemp[foodListItemIndex].minQuantity = value.nativeEvent.text;
+                  screenProps.updateFoodList(foodListTemp);
+                  storeData('foodList', foodListTemp);
+                  if (parseInt(value.nativeEvent.text, 10) >= parseInt(this.food.quantity, 10)) {
+                    this.addFoodToShoppingList();
+                  }
+                  Toast.show('La quantité minimale pour ce produit a bien été modifié');
+                } else {
+                  Toast.show('Vous devez rentrer un entier valide compris entre 1 et 20');
+                }
+              }}
+              defaultValue={this.food.minQuantity}
+
+            />
+
           </View>
           <View style={{ height: screenHeight / 4 }}>
             <Icon
