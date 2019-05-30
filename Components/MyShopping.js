@@ -13,14 +13,26 @@ export default class MyShopping extends Component {
     if (params.shoppingList !== undefined && params.shoppingList.length > 0) {
       return {
         headerRight:
-  <Icon
-    containerStyle={{ marginRight: 15 }}
-    name="pencil-outline"
-    color="#517fa4"
-    type="material-community"
-    size={28}
-    onPress={() => params.handleThis()}
-  />,
+  <View style={{ flexDirection: 'row' }}>
+    <Icon
+      containerStyle={{ marginRight: 25 }}
+      name="cart-arrow-up"
+      color="#517fa4"
+      type="material-community"
+      size={28}
+      onPress={() => params.moveToFoodList()}
+    />
+
+    <Icon
+      containerStyle={{ marginRight: 15 }}
+      name="pencil-outline"
+      color="#517fa4"
+      type="material-community"
+      size={28}
+      onPress={() => params.handleThis()}
+    />
+  </View>
+        ,
       };
     }
     return <View />;
@@ -39,6 +51,7 @@ export default class MyShopping extends Component {
 
   componentDidMount() {
     this.props.navigation.setParams({
+      moveToFoodList: this.moveToFoodList,
       handleThis: this.handleEditIcons,
       shoppingList: this.props.screenProps.shoppingList,
     });
@@ -91,6 +104,44 @@ export default class MyShopping extends Component {
         isEditIconsVisible: true,
       });
     }
+  }
+
+  moveToFoodList = () => {
+    const { screenProps } = this.props;
+    Alert.alert(
+      'Confirmation du déplacement',
+      'Voulez-vous transférer votre liste de courses vers le stock de nourriture ?',
+      [
+        {
+          text: 'Non',
+          style: 'cancel',
+        },
+        {
+          text: 'Oui',
+          onPress: () => {
+            const shoppingListTemp = screenProps.shoppingList;
+            const foodListTemp = screenProps.foodList;
+
+            shoppingListTemp.forEach((shoppingListItem) => {
+              let matchFood = _.find(foodListTemp, foodListItem => foodListItem.barcode === shoppingListItem.barcode);
+              if (matchFood !== undefined) {
+                matchFood.quantity = parseInt(matchFood.quantity, 10) + parseInt(shoppingListItem.quantity, 10);
+              } else {
+                foodListTemp.push(shoppingListItem);
+              }
+              matchFood = {};
+            });
+            screenProps.updateFoodList(foodListTemp);
+            storeData('foodList', foodListTemp);
+            shoppingListTemp.length = 0;
+            screenProps.updateShoppingList(shoppingListTemp);
+            storeData('shoppingList', shoppingListTemp);
+            Toast.show('Le transfert a bien été effectué');
+          },
+        },
+      ],
+      { cancelable: true },
+    );
   }
 
   render() {
