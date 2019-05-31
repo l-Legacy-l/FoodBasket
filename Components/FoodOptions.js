@@ -52,6 +52,7 @@ export default class FoodOptions extends Component {
     this.state = {
       isVisible: false,
       isAddDialogVisible: false,
+      isAddShoppingVisible: false,
       isRemoveDialogVisible: false,
       date: this.food.expirationDate,
     };
@@ -87,7 +88,7 @@ export default class FoodOptions extends Component {
 
       // Check if the quantity has reach the limit
       if (quantity <= parseInt(food.minQuantity, 10)) {
-        this.addFoodToShoppingList();
+        this.addFoodToShoppingList(1, 'automatique');
       }
     } else {
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
@@ -95,19 +96,27 @@ export default class FoodOptions extends Component {
     }
   }
 
-  addFoodToShoppingList = () => {
+  addFoodToShoppingList = (inputText, operation) => {
     const { screenProps } = this.props;
     const shoppingListTemp = screenProps.shoppingList;
     const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, shoppingListItem => shoppingListItem.barcode === this.food.barcode);
-    // Ignore the adding if there is already the food in the shoppingList
+    const foodToAdd = this.food;
+    const quantity = parseInt(inputText, 10);
     if (shoppingListItemIndex === -1) {
-      // Set the quantity to one by default
-      const foodToAdd = this.food;
-      foodToAdd.quantity = 1;
+      foodToAdd.quantity = quantity;
       shoppingListTemp.push(foodToAdd);
+      this.setState({ isAddShoppingVisible: false });
+      screenProps.updateShoppingList(shoppingListTemp);
+      storeData('shoppingList', shoppingListTemp);
+    } else if (operation === 'manuel') {
+      // manuel + there is already the product
+      shoppingListTemp[shoppingListItemIndex].quantity = quantity + parseInt(shoppingListTemp[shoppingListItemIndex].quantity, 10);
+      this.setState({ isAddShoppingVisible: false });
       screenProps.updateShoppingList(shoppingListTemp);
       storeData('shoppingList', shoppingListTemp);
     }
+
+    Toast.show(`Le produit ${this.foodName}a bien été ajouté à votre liste de course`);
   }
 
   render() {
@@ -280,7 +289,7 @@ export default class FoodOptions extends Component {
                   screenProps.updateFoodList(foodListTemp);
                   storeData('foodList', foodListTemp);
                   if (parseInt(value.nativeEvent.text, 10) >= parseInt(this.food.quantity, 10)) {
-                    this.addFoodToShoppingList();
+                    this.addFoodToShoppingList(1, 'automatique');
                   }
                   Toast.show('La quantité minimale pour ce produit a bien été modifié');
                 } else {
@@ -292,7 +301,17 @@ export default class FoodOptions extends Component {
             />
 
           </View>
-          <View style={{ height: screenHeight / 4 }}>
+          <View style={{ height: screenHeight / 6, flexDirection: 'row' }}>
+            <Icon
+              reverse
+              containerStyle={{ position: 'absolute', bottom: 10, right: 65 }}
+              name="cart-arrow-down"
+              type="material-community"
+              color="#517fa4"
+              size={18}
+              onPress={() => this.setState({ isAddShoppingVisible: true })}
+            />
+
             <Icon
               reverse
               containerStyle={{ position: 'absolute', bottom: 10, right: 10 }}
@@ -348,6 +367,17 @@ export default class FoodOptions extends Component {
           textInputProps={{ keyboardType: 'numeric' }}
           submitInput={inputText => this.sendInput(inputText, 'add')}
           closeDialog={() => this.setState({ isAddDialogVisible: false })}
+        />
+
+        <DialogInput
+          isDialogVisible={this.state.isAddShoppingVisible}
+          title="Quantité à ajouter"
+          message="Entrer la quantité du produit à ajouter à la liste de courses"
+          submitText="Ajouter"
+          cancelText="Annuler"
+          textInputProps={{ keyboardType: 'numeric' }}
+          submitInput={inputText => this.addFoodToShoppingList(inputText, 'manuel')}
+          closeDialog={() => this.setState({ isAddShoppingVisible: false })}
         />
       </View>
     );
