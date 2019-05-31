@@ -9,6 +9,7 @@ import { storeData } from '../DB/DB';
 export default class MyShopping extends Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
+
     // Edit button is useless if there is no food
     if (params.shoppingList !== undefined && params.shoppingList.length > 0) {
       return {
@@ -22,7 +23,14 @@ export default class MyShopping extends Component {
       size={28}
       onPress={() => params.moveToFoodList()}
     />
-
+    <Icon
+      containerStyle={{ marginRight: 25 }}
+      name="delete"
+      color="#517fa4"
+      type="material-community"
+      size={28}
+      onPress={() => params.deleteAllShoppingList()}
+    />
     <Icon
       containerStyle={{ marginRight: 15 }}
       name="pencil-outline"
@@ -52,6 +60,7 @@ export default class MyShopping extends Component {
   componentDidMount() {
     this.props.navigation.setParams({
       moveToFoodList: this.moveToFoodList,
+      deleteAllShoppingList: this.deleteAllShoppingList,
       handleThis: this.handleEditIcons,
       shoppingList: this.props.screenProps.shoppingList,
     });
@@ -144,12 +153,39 @@ export default class MyShopping extends Component {
     );
   }
 
-  render() {
-    const { screenProps } = this.props;
-    return (
-      <View>
-        <ScrollView>
-          {
+deleteAllShoppingList = () => {
+  const { screenProps } = this.props;
+  const shoppingListTemp = screenProps.shoppingList;
+
+
+  Alert.alert(
+    'Confirmation de suppression',
+    'Voulez-vous supprimer votre liste de courses?',
+    [
+      {
+        text: 'Non',
+        style: 'cancel',
+      },
+      {
+        text: 'Oui',
+        onPress: () => {
+          shoppingListTemp.length = 0;
+
+          screenProps.updateShoppingList(shoppingListTemp);
+          storeData('shoppingList', shoppingListTemp);
+        },
+      },
+    ],
+    { cancelable: true },
+  );
+}
+
+render() {
+  const { screenProps } = this.props;
+  return (
+    <View>
+      <ScrollView>
+        {
           screenProps.shoppingList.map(item => (
             <ListItem
               key={item.barcode}
@@ -232,35 +268,35 @@ export default class MyShopping extends Component {
 
                 </View>
               )}
-              badge={{ value: item.quantity, badgeStyle: { backgroundColor: '#517fa4', width: 40, height: 25 }, textStyle: { fontSize: 18 } }}
+              badge={{ value: `x ${item.quantity}`, badgeStyle: { backgroundColor: '#517fa4', height: 25 }, textStyle: { fontSize: 18 } }}
             />
           ))
         }
-        </ScrollView>
-        {/*            TODO REWORK
+      </ScrollView>
+      {/*            TODO REWORK
            A bug appear when DialoInput is into the ScrollView component */}
-        <DialogInput
-          isDialogVisible={this.state.isRemoveDialogVisible}
-          title="Quantité à supprimer"
-          message="Entrer la quantité du produit à supprimer de la liste de course"
-          submitText="Supprimer"
-          cancelText="Annuler"
-          textInputProps={{ keyboardType: 'numeric' }}
-          submitInput={inputText => this.sendInput(inputText, 'delete')}
-          closeDialog={() => this.setState({ isRemoveDialogVisible: false })}
-        />
+      <DialogInput
+        isDialogVisible={this.state.isRemoveDialogVisible}
+        title="Quantité à supprimer"
+        message="Entrer la quantité du produit à supprimer de la liste de course"
+        submitText="Supprimer"
+        cancelText="Annuler"
+        textInputProps={{ keyboardType: 'numeric' }}
+        submitInput={inputText => this.sendInput(inputText, 'delete')}
+        closeDialog={() => this.setState({ isRemoveDialogVisible: false })}
+      />
 
-        <DialogInput
-          isDialogVisible={this.state.isAddDialogVisible}
-          title="Quantité à ajouter"
-          message="Entrer la quantité du produit à ajouter à la liste de course"
-          submitText="Ajouter"
-          cancelText="Annuler"
-          textInputProps={{ keyboardType: 'numeric' }}
-          submitInput={inputText => this.sendInput(inputText, 'add')}
-          closeDialog={() => this.setState({ isAddDialogVisible: false })}
-        />
-      </View>
-    );
-  }
+      <DialogInput
+        isDialogVisible={this.state.isAddDialogVisible}
+        title="Quantité à ajouter"
+        message="Entrer la quantité du produit à ajouter à la liste de course"
+        submitText="Ajouter"
+        cancelText="Annuler"
+        textInputProps={{ keyboardType: 'numeric' }}
+        submitInput={inputText => this.sendInput(inputText, 'add')}
+        closeDialog={() => this.setState({ isAddDialogVisible: false })}
+      />
+    </View>
+  );
+}
 }
