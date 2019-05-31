@@ -101,7 +101,10 @@ export default class FoodOptions extends Component {
     const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, shoppingListItem => shoppingListItem.barcode === this.food.barcode);
     // Ignore the adding if there is already the food in the shoppingList
     if (shoppingListItemIndex === -1) {
-      shoppingListTemp.push(this.food);
+      // Set the quantity to one by default
+      const foodToAdd = this.food;
+      foodToAdd.quantity = 1;
+      shoppingListTemp.push(foodToAdd);
       screenProps.updateShoppingList(shoppingListTemp);
       storeData('shoppingList', shoppingListTemp);
     }
