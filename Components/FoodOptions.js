@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import {
   View, Text, Modal, Image, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Alert,
 } from 'react-native';
-import { Badge, Icon, Input } from 'react-native-elements';
+import {
+  Badge, Icon, Input, Tooltip,
+} from 'react-native-elements';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import _ from 'lodash';
 import Toast from 'react-native-simple-toast';
@@ -190,7 +192,14 @@ export default class FoodOptions extends Component {
             </View>
           </View>
           <View style={[styles.viewContainer, { marginTop: 30, alignItems: 'center' }]}>
-            <Text style={[styles.titleText, { fontSize: 16 }]}> Date de péremption: </Text>
+            <Tooltip
+              backgroundColor="#517fa4"
+              height={130}
+              width={190}
+              popover={<Text style={{ color: 'white' }}>Indiquez la date de péremption la plus proche. Une notification sera envoyé 1 semaine et une autre 2 jours avant la date d'expiration du produit (par défaut).</Text>}
+            >
+              <Text style={[styles.titleText, { fontSize: 16 }]}> Date de péremption: </Text>
+            </Tooltip>
             <DatePicker
               style={{ width: 195 }}
               date={this.state.date}
@@ -270,7 +279,14 @@ export default class FoodOptions extends Component {
             />
           </View>
           <View style={[styles.viewContainer, { marginTop: 30, alignItems: 'center' }]}>
-            <Text style={[styles.titleText, { fontSize: 16 }]}> Quantité minimale: </Text>
+            <Tooltip
+              backgroundColor="#517fa4"
+              height={130}
+              width={190}
+              popover={<Text style={{ color: 'white' }}>Ce champ permet d'ajouter automatiquement le produit dans votre liste de courses une fois la limite de quantité minimale atteinte.</Text>}
+            >
+              <Text style={[styles.titleText, { fontSize: 16 }]}> Quantité minimale: </Text>
+            </Tooltip>
             <Input
               placeholder="Entrer une valeur"
               containerStyle={{
