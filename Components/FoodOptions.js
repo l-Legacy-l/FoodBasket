@@ -65,26 +65,30 @@ export default class FoodOptions extends Component {
       const { screenProps } = this.props;
       const foodListTemp = screenProps.foodList;
       const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
-
+      const food = foodListTemp[foodListItemIndex];
       let quantity = parseInt(this.food.quantity, 10);
 
       if (operation === 'add') {
         quantity += inputNumber;
-        foodListTemp[foodListItemIndex].quantity = quantity;
+        food.quantity = quantity;
       } else {
         quantity -= inputNumber;
         if (quantity <= 0) {
           // delete the food object of the foodList array
           foodListTemp.splice(foodListItemIndex, 1);
         } else {
-          foodListTemp[foodListItemIndex].quantity = quantity;
+          food.quantity = quantity;
         }
       }
-
-      screenProps.updateFoodList(foodListTemp);
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
+      screenProps.updateFoodList(foodListTemp);
       storeData('foodList', foodListTemp);
       Toast.show(`La quantité de ${this.foodName} a bien été modifée`);
+
+      // Check if the quantity has reach the limit
+      if (quantity <= parseInt(food.minQuantity, 10)) {
+        this.addFoodToShoppingList();
+      }
     } else {
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
       Toast.show('Vous devez rentrer un entier valide compris entre 1 et 20');
