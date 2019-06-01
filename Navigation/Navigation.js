@@ -1,6 +1,8 @@
+import React from 'react';
 import {
   createStackNavigator, createAppContainer, createBottomTabNavigator, createMaterialTopTabNavigator,
 } from 'react-navigation';
+import { Icon } from 'react-native-elements';
 import Search from '../Components/Search';
 import FoodListSearch from '../Components/FoodListSearch';
 import ShoppingListSearch from '../Components/ShoppingListSearch';
@@ -22,7 +24,13 @@ const FoodDetailsTopNavigator = createMaterialTopTabNavigator({
   initialRouteName: 'Options',
   tabBarOptions: {
     style: {
+      backgroundColor: 'white',
+    },
+    activeTintColor: '#517fa4',
+    inactiveTintColor: 'black',
+    indicatorStyle: {
       backgroundColor: '#517fa4',
+      height: 3,
     },
   },
   tabBarPosition: 'top',
@@ -92,6 +100,9 @@ const MyFoodsStackNavigator = createStackNavigator({
     screen: FoodDetailsTopNavigator,
     navigationOptions: {
       title: 'Détails d\'un aliment',
+      headerStyle: { backgroundColor: 'white', elevation: 0 },
+      headerTitleStyle: { color: 'black' },
+      headerTintColor: 'black',
     },
   },
 });
@@ -108,14 +119,38 @@ const MyShoppingStackNavigator = createStackNavigator({
 const MainTabNavigator = createBottomTabNavigator({
   Search: {
     screen: SearchStackNavigator,
+    navigationOptions: {
+      title: 'Recherche',
+      tabBarIcon: <Icon
+        name="magnify"
+        type="material-community"
+        color="#517fa4"
+      />,
+    },
   },
 
   MyFoods: {
     screen: MyFoodsStackNavigator,
+    navigationOptions: {
+      title: 'Stock de nourritures',
+      tabBarIcon: <Icon
+        name="food-fork-drink"
+        type="material-community"
+        color="#517fa4"
+      />,
+    },
   },
 
   MyShopping: {
     screen: MyShoppingStackNavigator,
+    navigationOptions: {
+      title: 'Liste de courses',
+      tabBarIcon: <Icon
+        name="cart-outline"
+        type="material-community"
+        color="#517fa4"
+      />,
+    },
   },
 });
 
