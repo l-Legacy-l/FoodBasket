@@ -79,19 +79,22 @@ export default class FoodOptions extends Component {
         if (quantity <= 0) {
           // delete the food object of the foodList array
           foodListTemp.splice(foodListItemIndex, 1);
+          this.props.navigation.goBack(null);
+          // Delete notification
+          PushNotification.cancelLocalNotifications({ id: `${this.food.barcode.slice(0, 8)}1` });
+          PushNotification.cancelLocalNotifications({ id: `${this.food.barcode.slice(0, 8)}2` });
         } else {
           food.quantity = quantity;
+        }
+        // Check if the quantity has reach the limit
+        if (quantity <= parseInt(food.minQuantity, 10)) {
+          this.addFoodToShoppingList(1, 'automatique');
         }
       }
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
       screenProps.updateFoodList(foodListTemp);
       storeData('foodList', foodListTemp);
       Toast.show(`La quantité de ${this.foodName} a bien été modifée`);
-
-      // Check if the quantity has reach the limit
-      if (quantity <= parseInt(food.minQuantity, 10)) {
-        this.addFoodToShoppingList(1, 'automatique');
-      }
     } else {
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
       Toast.show('Vous devez rentrer un entier valide compris entre 1 et 20');
@@ -354,6 +357,8 @@ export default class FoodOptions extends Component {
                         storeData('foodList', foodListTemp);
                         Toast.show(`Le produit ${this.foodName} a bien été supprimée`);
                         this.props.navigation.goBack(null);
+                        PushNotification.cancelLocalNotifications({ id: `${this.food.barcode.slice(0, 8)}1` });
+                        PushNotification.cancelLocalNotifications({ id: `${this.food.barcode.slice(0, 8)}2` });
                       },
                     },
                   ],

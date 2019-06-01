@@ -3,6 +3,7 @@ import { ScrollView, View, Alert } from 'react-native';
 import { ListItem, Icon } from 'react-native-elements';
 import DialogInput from 'react-native-dialog-input';
 import Toast from 'react-native-simple-toast';
+import PushNotification from 'react-native-push-notification';
 import _ from 'lodash';
 import { storeData } from '../DB/DB';
 
@@ -63,8 +64,14 @@ export default class MyFoods extends Component {
         if (quantity <= 0) {
           // delete the food object of the foodList array
           foodListTemp.splice(foodListItemIndex, 1);
+          PushNotification.cancelLocalNotifications({ id: `${food.barcode.slice(0, 8)}1` });
+          PushNotification.cancelLocalNotifications({ id: `${food.barcode.slice(0, 8)}2` });
         } else {
           food.quantity = quantity;
+        }
+        // Check if the quantity has reach the limit
+        if (quantity <= parseInt(food.minQuantity, 10)) {
+          this.addFoodToShoppingList();
         }
       }
 
@@ -72,10 +79,6 @@ export default class MyFoods extends Component {
       screenProps.updateFoodList(foodListTemp);
       storeData('foodList', foodListTemp);
       Toast.show(`La quantité de ${foodName} a bien été modifée`);
-      // Check if the quantity has reach the limit
-      if (quantity <= parseInt(food.minQuantity, 10)) {
-        this.addFoodToShoppingList();
-      }
     } else {
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
       Toast.show('Vous devez rentrer un entier valide compris entre 1 et 20');
@@ -154,14 +157,15 @@ export default class MyFoods extends Component {
                                 {
                                   text: 'Oui',
                                   onPress: () => {
-                                    let foodName = '';
-                                    foodName = item.product_name_fr !== undefined ? item.product_name_fr : '';
+                                    const foodName = item.product_name_fr !== undefined ? item.product_name_fr : '';
                                     const foodListTemp = screenProps.foodList;
                                     const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === item.barcode);
                                     foodListTemp.splice(foodListItemIndex, 1);
                                     screenProps.updateFoodList(foodListTemp);
                                     storeData('foodList', foodListTemp);
                                     Toast.show(`Le produit ${foodName} a bien été supprimée`);
+                                    PushNotification.cancelLocalNotifications({ id: `${item.barcode.slice(0, 8)}1` });
+                                    PushNotification.cancelLocalNotifications({ id: `${item.barcode.slice(0, 8)}2` });
                                   },
                                 },
                               ],
