@@ -1,4 +1,4 @@
-package com.foodbasket3;
+package com.foodbasket;
 
 import android.app.Application;
 

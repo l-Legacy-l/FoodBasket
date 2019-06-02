@@ -1,4 +1,4 @@
-package com.foodbasket3;
+package com.foodbasket;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "FoodBasket3";
+        return "FoodBasket";
     }
 }
