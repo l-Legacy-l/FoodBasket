@@ -4,6 +4,7 @@ import {
   StyleSheet, View, Button, TextInput,
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
+import { SearchBar, Icon } from 'react-native-elements';
 import FoodItem from './FoodItem';
 import { getFoodFromApi } from '../API/OFFApi';
 
@@ -13,18 +14,13 @@ const styles = StyleSheet.create(
       flex: 1,
       flexDirection: 'column',
     },
-    mainContainer:
-    {
+    mainContainer: {
       flex: 1,
     },
-    textInput:
-    {
-      marginLeft: 5,
-      marginRight: 5,
-      height: 50,
-      borderColor: '#FFFF',
-      borderWidth: 1,
-      paddingLeft: 5,
+    bottomButton: {
+      position: 'absolute',
+      bottom: 10,
+      right: 10,
     },
   },
 );
@@ -79,32 +75,53 @@ export default class FoodListSearch extends React.Component {
       const { navigation } = this.props;
       return (
         <View style={styles.mainContainer}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Insérer le code barre du produit"
-            onChangeText={text => this._searchTextInputChanged(text)}
-            value={this.state.textToScan}
-          />
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SearchBar
+              containerStyle={{ width: '85%', backgroundColor: 'white', fontSize: 12 }}
+              placeholder="Insérer le code barre du produit"
+              lightTheme
+              round
+              inputStyle={{ color: 'black', fontSize: 16 }}
+              onChangeText={text => this._searchTextInputChanged(text)}
+              value={this.state.textToScan}
+            />
 
-          <Button
-            style={{ height: 100 }}
-            title="Search"
-            onPress={() => { this._loadFood(); }}
-          />
-          <Button
-            style={{ height: 400 }}
-            title="Ouvrir la caméra"
-            onPress={() => { navigation.navigate('Camera', { onNavigateBack: this.handleOnNavigateBack }); }}
-          />
+            <Icon
+              reverse
+              name="magnify"
+              type="material-community"
+              color="#517fa4"
+              size={20}
+              onPress={() => this._loadFood()}
+            />
+
+          </View>
+
+          <View style={styles.bottomButton}>
+            <Icon
+              reverse
+              name="barcode-scan"
+              type="material-community"
+              color="#517fa4"
+              size={24}
+              onPress={() => { navigation.navigate('Camera', { onNavigateBack: this.handleOnNavigateBack }); }}
+            />
+          </View>
+
 
           {
             this.state.showButtonAdd
               ? (
-                <Button
-                  style={{ height: 400 }}
-                  title="Ajouter dans la base de données"
-                  onPress={() => { navigation.navigate('AddFoodItem', { textToScan: this.state.textToScan }); }}
-                />
+                <View style={[styles.bottomButton, { right: 80 }]}>
+                  <Icon
+                    reverse
+                    name="database-plus"
+                    type="material-community"
+                    color="#517fa4"
+                    size={24}
+                    onPress={() => { navigation.navigate('AddFoodItem', { textToScan: this.state.textToScan }); }}
+                  />
+                </View>
               )
               : null}
           {this.state.showFood
