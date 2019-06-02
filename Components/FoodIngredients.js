@@ -83,7 +83,10 @@ export default class FoodIngredients extends Component {
             onPress={() => this.setState({ isVisible: true })}
           >
             <Image
-              source={{ uri: this.food.imageIngredients }}
+              source={this.food.imageIngredients !== undefined
+                ? { uri: this.food.imageIngredients }
+                : require('../assets/noPicture.png')
+            }
               style={styles.image}
             />
           </TouchableOpacity>

@@ -59,7 +59,6 @@ export default class FoodNutritions extends Component {
   }
 
   evaluateNutritionColor = (nutrient, value) => {
-    console.log(`je passe ${nutrient} ${value}`);
     if (nutrient === 'Matières grasses') {
       if (value >= 10 * this.coeff) {
         this.colorBadge = 'red';
@@ -150,7 +149,10 @@ export default class FoodNutritions extends Component {
             onPress={() => this.setState({ isVisible: true })}
           >
             <Image
-              source={{ uri: this.food.imageNutrients }}
+              source={this.food.imageNutrients !== undefined
+                ? { uri: this.food.imageNutrients }
+                : require('../assets/noPicture.png')
+            }
               style={styles.image}
             />
           </TouchableOpacity>

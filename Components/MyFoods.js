@@ -124,7 +124,9 @@ export default class MyFoods extends Component {
               title={item.name}
               titleStyle={{ fontSize: 20 }}
               leftAvatar={{
-                source: { uri: item.imageFront },
+                source: item.imageFront !== undefined
+                  ? { uri: item.imageFront }
+                  : require('../assets/noPicture.png'),
                 size: 'large',
                 rounded: false,
                 avatarStyle: { borderRadius: 20 },

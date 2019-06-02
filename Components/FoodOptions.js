@@ -130,20 +130,29 @@ export default class FoodOptions extends Component {
     return (
       <View>
         <ScrollView>
-          <Modal
-            visible={this.state.isVisible}
-            onRequestClose={() => this.setState({ isVisible: false })}
-            animationType="fade"
-            transparent
-          >
-            <ImageViewer imageUrls={[{ url: this.food.imageFront }]} />
-          </Modal>
+          {this.food.imageFront !== undefined
+            ? (
+              <Modal
+                visible={this.state.isVisible}
+                onRequestClose={() => this.setState({ isVisible: false })}
+                animationType="fade"
+                transparent
+              >
+                <ImageViewer imageUrls={[{ url: this.food.imageFront }]} />
+              </Modal>
+            )
+            : <View />
+
+        }
           <View style={[styles.viewContainer, { elevation: 2 }]}>
             <TouchableOpacity
               onPress={() => this.setState({ isVisible: true })}
             >
               <Image
-                source={{ uri: this.food.imageFront }}
+                source={this.food.imageFront !== undefined
+                  ? { uri: this.food.imageFront }
+                  : require('../assets/noPicture.png')
+            }
                 style={styles.image}
               />
               <Text style={styles.extraText}>{this.food.barcode}</Text>

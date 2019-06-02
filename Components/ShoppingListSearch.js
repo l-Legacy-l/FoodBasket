@@ -94,7 +94,9 @@ export default class componentName extends Component {
       title={item.product_name_fr}
       titleStyle={{ fontSize: 20 }}
       leftAvatar={{
-        source: { uri: item.image_front_url },
+        source: item.image_front_url !== undefined
+          ? { uri: item.image_front_url }
+          : require('../assets/noPicture.png'),
         size: 'large',
         rounded: false,
         avatarStyle: { borderRadius: 20 },

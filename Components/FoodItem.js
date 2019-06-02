@@ -145,7 +145,10 @@ class FoodItem extends React.Component {
         <View style={styles.mainContainer}>
           <Image
             style={styles.image}
-            source={{ uri: food.image_front_url }}
+            source={food.image_front_url !== undefined
+              ? { uri: food.image_front_url }
+              : require('../assets/noPicture.png')
+            }
           />
 
           <View styles={styles.contentContainer}>
