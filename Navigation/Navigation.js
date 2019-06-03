@@ -4,6 +4,8 @@ import {
 } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import Search from '../Components/Search';
+import SignUp from '../Components/authentification/SignUp';
+import SignIn from '../Components/authentification/SignIn';
 import FoodListSearch from '../Components/FoodListSearch';
 import ShoppingListSearch from '../Components/ShoppingListSearch';
 import Camera from '../Components/Camera';
@@ -154,6 +156,28 @@ const MainTabNavigator = createBottomTabNavigator({
   },
 });
 
-const App = createAppContainer(MainTabNavigator);
+const AuthentificationStackNavigator = createStackNavigator({
+  // Match the component Search (name is free)
+  SignUp: {
+    screen: SignUp,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  SignIn: {
+    screen: SignIn,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  Tabs: {
+    screen: MainTabNavigator,
+    navigationOptions: {
+      header: null,
+    },
+  },
+});
+
+const App = createAppContainer(AuthentificationStackNavigator);
 
 export default App;
