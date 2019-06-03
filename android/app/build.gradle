@@ -101,6 +101,7 @@ android {
         applicationId "com.foodbasket"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
     }
@@ -135,6 +136,9 @@ android {
 
 dependencies {
     implementation project(':react-native-firebase')
+    implementation "com.google.android.gms:play-services-base:16.1.0"
+    implementation "com.google.firebase:firebase-core:16.0.9"
+    implementation 'com.google.firebase:firebase-auth:17.0.0'
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-push-notification')
     implementation project(':react-native-image-picker')
