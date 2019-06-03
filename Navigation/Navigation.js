@@ -157,15 +157,14 @@ const MainTabNavigator = createBottomTabNavigator({
 });
 
 const AuthentificationStackNavigator = createStackNavigator({
-  // Match the component Search (name is free)
-  SignUp: {
-    screen: SignUp,
+  SignIn: {
+    screen: SignIn,
     navigationOptions: {
       header: null,
     },
   },
-  SignIn: {
-    screen: SignIn,
+  SignUp: {
+    screen: SignUp,
     navigationOptions: {
       header: null,
     },

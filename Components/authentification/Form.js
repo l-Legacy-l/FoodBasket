@@ -59,10 +59,11 @@ export default class Form extends Component {
       frMessage = 'Erreur, le réseau n\'est pas disponible';
     } else if (message.includes('badly')) {
       frMessage = 'Erreur, l\'adresse e-mail est incorrecte';
+    } else if (message.includes('password is invalid') || message.includes('no user record')) {
+      frMessage = 'Erreur, le mot de passe est invalide ou ce compte n\'existe pas';
     } else {
       frMessage = 'Erreur, cette adresse est déjà utilisé par un autre compte';
     }
-
     this.setState({ errorMessage: frMessage });
   }
 
@@ -72,6 +73,16 @@ export default class Form extends Component {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(this.props.navigate).then(() => Toast.show('Inscription réussie'))
+      .catch(error => this.translateErrorMessage(error.message));
+  }
+
+
+  handleSignIn = () => {
+    const { email, password } = this.state;
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(this.props.navigate)
       .catch(error => this.translateErrorMessage(error.message));
   }
 
@@ -95,7 +106,7 @@ export default class Form extends Component {
         <TextInput
           style={styles.inputBox}
           underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder="Email"
+          placeholder="E-mail"
           placeholderTextColor="#ffffff"
           selectionColor="#fff"
           keyboardType="email-address"
@@ -106,7 +117,7 @@ export default class Form extends Component {
         <TextInput
           style={styles.inputBox}
           underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder="Password"
+          placeholder="Mot de passe"
           secureTextEntry
           placeholderTextColor="#ffffff"
           onChangeText={password => this.setState({ password })}
@@ -114,10 +125,16 @@ export default class Form extends Component {
           ref={input => this.password = input}
         />
         <TouchableOpacity
-          onPress={this.handleSignUp}
+          onPress={() => {
+            if (this.props.type === 'Se connecter') {
+              this.handleSignIn();
+            } else {
+              this.handleSignUp();
+            }
+          }}
           style={styles.button}
         >
-          <Text style={styles.buttonText}>S'inscrire</Text>
+          <Text style={styles.buttonText}>{this.props.type}</Text>
         </TouchableOpacity>
       </View>
     );
