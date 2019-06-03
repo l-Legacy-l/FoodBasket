@@ -103,8 +103,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        vectorDrawables.useSupportLibrary = true
-
     }
     splits {
         abi {
@@ -136,8 +134,9 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-push-notification')
+    implementation project(':react-native-firebase')
     implementation project(':react-native-vector-icons')
+    implementation project(':react-native-push-notification')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-image-crop-picker')
     implementation project(':react-native-gesture-handler')
@@ -153,3 +152,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+apply plugin: 'com.google.gms.google-services'

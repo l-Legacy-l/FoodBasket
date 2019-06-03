@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "FoodBasket3-tvOS.app"
-               BlueprintName = "FoodBasket3-tvOS"
-               ReferencedContainer = "container:FoodBasket3.xcodeproj">
+               BuildableName = "FoodBasket-tvOS.app"
+               BlueprintName = "FoodBasket-tvOS"
+               ReferencedContainer = "container:FoodBasket.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "FoodBasket3-tvOSTests.xctest"
-               BlueprintName = "FoodBasket3-tvOSTests"
-               ReferencedContainer = "container:FoodBasket3.xcodeproj">
+               BuildableName = "FoodBasket-tvOSTests.xctest"
+               BlueprintName = "FoodBasket-tvOSTests"
+               ReferencedContainer = "container:FoodBasket.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "FoodBasket3-tvOSTests.xctest"
-               BlueprintName = "FoodBasket3-tvOSTests"
-               ReferencedContainer = "container:FoodBasket3.xcodeproj">
+               BuildableName = "FoodBasket-tvOSTests.xctest"
+               BlueprintName = "FoodBasket-tvOSTests"
+               ReferencedContainer = "container:FoodBasket.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "FoodBasket3-tvOS.app"
-            BlueprintName = "FoodBasket3-tvOS"
-            ReferencedContainer = "container:FoodBasket3.xcodeproj">
+            BuildableName = "FoodBasket-tvOS.app"
+            BlueprintName = "FoodBasket-tvOS"
+            ReferencedContainer = "container:FoodBasket.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "FoodBasket3-tvOS.app"
-            BlueprintName = "FoodBasket3-tvOS"
-            ReferencedContainer = "container:FoodBasket3.xcodeproj">
+            BuildableName = "FoodBasket-tvOS.app"
+            BlueprintName = "FoodBasket-tvOS"
+            ReferencedContainer = "container:FoodBasket.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -113,9 +113,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "FoodBasket3-tvOS.app"
-            BlueprintName = "FoodBasket3-tvOS"
-            ReferencedContainer = "container:FoodBasket3.xcodeproj">
+            BuildableName = "FoodBasket-tvOS.app"
+            BlueprintName = "FoodBasket-tvOS"
+            ReferencedContainer = "container:FoodBasket.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
