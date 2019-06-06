@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import Toast from 'react-native-simple-toast';
+import { getData } from '../../DB/DB';
 
 const styles = StyleSheet.create({
   container: {
@@ -64,6 +65,7 @@ export default class Form extends Component {
     } else {
       frMessage = 'Erreur, cette adresse est déjà utilisé par un autre compte';
     }
+    console.log(`je passe erreur message ${message}`);
     this.setState({ errorMessage: frMessage });
   }
 
@@ -82,6 +84,13 @@ export default class Form extends Component {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        getData('foodList').then((res) => {
+          console.log(`je passe foodlist ${JSON.stringify(res)}`);
+          this.props.screenProps.updateFoodList(res);
+        });
+        getData('shoppingList').then(res => this.props.screenProps.updateShoppingList(res));
+      })
       .then(this.props.navigate)
       .catch(error => this.translateErrorMessage(error.message));
   }

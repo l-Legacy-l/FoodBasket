@@ -85,8 +85,9 @@ class FoodItem extends React.Component {
       const { food, screenProps } = this.props;
       let foodName = '';
       foodName = food.product_name_fr !== undefined ? food.product_name_fr : '';
-      const foodListTemp = screenProps.foodList;
+      const foodListTemp = _.cloneDeep(screenProps.foodList);
       const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
+      // console.log(`je passe save ${JSON.stringify(screenProps.updateFoodList(foodListTemp))}`);
 
       // Check if there is already this product in the list
       if (foodListItemIndex !== -1) {
@@ -103,27 +104,27 @@ class FoodItem extends React.Component {
             foodListTemp[foodListItemIndex].quantity = quantity;
           }
         }
-
         screenProps.updateFoodList(foodListTemp);
         this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
         storeData('foodList', foodListTemp);
         Toast.show(`La quantité de ${foodName} a bien été modifée`);
       } else {
         const foodItem = {};
-
+        // write data in right order for firebase data comparaison
         foodItem.barcode = food.code;
-        foodItem.name = food.product_name_fr;
-        foodItem.ingredients = food.ingredients_text_fr;
-        foodItem.nutrients = food.nutriments;
-        foodItem.nutriscore = food.nutrition_grades;
-        foodItem.categorie = food.categories_hierarchy !== undefined ? food.categories_hierarchy[0] : '';
         foodItem.brands = food.brands;
-        foodItem.productWeight = food.quantity;
-        foodItem.quantity = inputText;
-
+        foodItem.categorie = food.categories_hierarchy !== undefined ? food.categories_hierarchy[0] : '';
         foodItem.imageFront = food.image_front_url;
         foodItem.imageIngredients = food.image_ingredients_url;
         foodItem.imageNutrients = food.image_nutrition_url;
+        foodItem.ingredients = food.ingredients_text_fr;
+        foodItem.name = food.product_name_fr;
+        if (food.nutriments.length > 0) {
+          foodItem.nutrients = food.nutriments;
+        }
+        foodItem.nutriscore = food.nutrition_grades;
+        foodItem.productWeight = food.quantity;
+        foodItem.quantity = inputText;
 
         foodListTemp.push(foodItem);
 
@@ -188,7 +189,7 @@ class FoodItem extends React.Component {
                               onPress: () => {
                                 let foodName = '';
                                 foodName = food.product_name_fr !== undefined ? food.product_name_fr : '';
-                                const foodListTemp = screenProps.foodList;
+                                const foodListTemp = _.cloneDeep(screenProps.foodList);
                                 const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
                                 foodListTemp.splice(foodListItemIndex, 1);
                                 screenProps.updateFoodList(foodListTemp);

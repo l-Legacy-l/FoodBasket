@@ -62,19 +62,20 @@ export default class componentName extends Component {
         const shoppingItem = {};
 
         shoppingItem.barcode = this.food.code;
-        shoppingItem.name = foodName;
-
-        shoppingItem.ingredients = this.food.ingredients_text_fr;
-        shoppingItem.nutrients = this.food.nutriments;
-        shoppingItem.nutriscore = this.food.nutrition_grades;
-        shoppingItem.categorie = this.food.categories_hierarchy !== undefined ? this.food.categories_hierarchy[0] : '';
         shoppingItem.brands = this.food.brands;
-        shoppingItem.productWeight = this.food.quantity;
-        shoppingItem.quantity = inputText;
-
+        shoppingItem.categorie = this.food.categories_hierarchy !== undefined ? this.food.categories_hierarchy[0] : '';
         shoppingItem.imageFront = this.food.image_front_url;
         shoppingItem.imageIngredients = this.food.image_ingredients_url;
         shoppingItem.imageNutrients = this.food.image_nutrition_url;
+        shoppingItem.ingredients = this.food.ingredients_text_fr;
+        shoppingItem.name = this.food.product_name_fr;
+        if (this.food.nutriments.length > 0) {
+          shoppingItem.nutrients = this.food.nutriments;
+        }
+        shoppingItem.nutriscore = this.food.nutrition_grades;
+        shoppingItem.productWeight = this.food.quantity;
+        shoppingItem.quantity = inputText;
+
 
         shoppingListTemp.push(shoppingItem);
         Toast.show(`L'aliment ${`${foodName}`} a bien été ajoutée à la liste de course`);

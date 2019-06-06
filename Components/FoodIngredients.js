@@ -90,7 +90,7 @@ export default class FoodIngredients extends Component {
               style={styles.image}
             />
           </TouchableOpacity>
-          {this.food.nutrients['nova-group'] !== undefined
+          {this.food.nutrients && this.food.nutrients['nova-group'] !== undefined
             ? (
               <View style={styles.viewContainer}>
                 <Image

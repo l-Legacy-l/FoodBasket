@@ -1,6 +1,6 @@
 import React from 'react';
 import Navigation from './Navigation/Navigation';
-import { getData } from './DB/DB';
+// import { getData } from './DB/DB';
 
 
 export default class App extends React.Component {
@@ -10,12 +10,13 @@ export default class App extends React.Component {
       foodList: [],
       shoppingList: [],
     };
+    console.disableYellowBox = true;
   }
 
-  componentDidMount = () => {
+  /*   componentDidMount = () => {
     getData('foodList').then(res => this.setState({ foodList: res }));
     getData('shoppingList').then(res => this.setState({ shoppingList: res }));
-  };
+  }; */
 
   updateFoodList = (foodList) => {
     this.setState({ foodList });

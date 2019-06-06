@@ -33,7 +33,7 @@ export default class Signup extends PureComponent {
   render() {
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <Form navigate={() => this.props.navigation.navigate('Tabs')} type="Se connecter" />
+        <Form navigate={() => this.props.navigation.navigate('Tabs')} type="Se connecter" screenProps={this.props.screenProps} />
         <View style={styles.signupTextCont}>
           <Text style={styles.signupText}>Vous n'êtes pas encore inscris ?</Text>
           <TouchableOpacity onPress={() => this.props.navigation.navigate('SignUp')}>

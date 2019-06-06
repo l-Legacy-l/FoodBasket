@@ -174,7 +174,7 @@ export default class FoodNutritions extends Component {
             : <View />
           }
         </View>
-        {Object.keys(this.food.nutrients).length !== 0
+        {this.food.nutrients && Object.keys(this.food.nutrients).length !== 0
 
           ? (
             <View>
