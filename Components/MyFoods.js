@@ -10,8 +10,10 @@ import { storeData } from '../DB/DB';
 export default class MyFoods extends Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
+    console.log(`je passe foodList ${JSON.stringify(params.foodList)}`);
+
     // Edit button is useless if there is no food
-    if (params.foodList !== undefined && params.foodList.length > 0) {
+    if (params.foodList && params.foodList.length > 0) {
       return {
         headerRight:
   <Icon
@@ -45,6 +47,14 @@ export default class MyFoods extends Component {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.screenProps.foodList !== nextProps.screenProps.foodList) {
+      this.props.navigation.setParams({
+        foodList: nextProps.screenProps.foodList,
+      });
+    }
+  }
+
   sendInput = (inputText, operation) => {
     const inputNumber = parseInt(inputText, 10);
 
@@ -52,7 +62,8 @@ export default class MyFoods extends Component {
     if (!Number.isNaN(inputNumber) && inputNumber >= 1 && inputNumber <= 20) {
       const { screenProps } = this.props;
       const foodName = this.foodListItem.name !== undefined ? this.foodListItem.name : '';
-      const foodListTemp = screenProps.foodList;
+      const foodListTemp = _.cloneDeep(screenProps.foodList);
+      console.log(`je passe foodlisttemp input ${JSON.stringify(foodListTemp)}`);
       const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.foodListItem.barcode);
       const food = foodListTemp[foodListItemIndex];
       let quantity = parseInt(food.quantity, 10);
@@ -76,7 +87,6 @@ export default class MyFoods extends Component {
       }
 
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
-      screenProps.updateFoodList(foodListTemp);
       storeData('foodList', foodListTemp);
       Toast.show(`La quantité de ${foodName} a bien été modifée`);
     } else {
@@ -87,7 +97,7 @@ export default class MyFoods extends Component {
 
     addFoodToShoppingList = () => {
       const { screenProps } = this.props;
-      const shoppingListTemp = screenProps.shoppingList;
+      const shoppingListTemp = _.cloneDeep(screenProps.shoppingList);
       const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, shoppingListItem => shoppingListItem.barcode === this.foodListItem.barcode);
       // Ignore the adding if there is already the food in the shoppingList
       if (shoppingListItemIndex === -1) {
@@ -95,7 +105,6 @@ export default class MyFoods extends Component {
         const foodToAdd = this.foodListItem;
         foodToAdd.quantity = 1;
         shoppingListTemp.push(foodToAdd);
-        screenProps.updateShoppingList(shoppingListTemp);
         storeData('shoppingList', shoppingListTemp);
       }
     }
@@ -114,102 +123,106 @@ export default class MyFoods extends Component {
 
   render() {
     const { screenProps, navigation } = this.props;
+    console.log(`je passe foodList render ${JSON.stringify(this.props.screenProps.foodList)}`);
+
     return (
       <View>
         <ScrollView>
           {
-          screenProps.foodList.map(item => (
-            <ListItem
-              key={item.barcode}
-              title={item.name}
-              titleStyle={{ fontSize: 20 }}
-              leftAvatar={{
-                source: item.imageFront !== undefined
-                  ? { uri: item.imageFront }
-                  : require('../assets/noPicture.png'),
-                size: 'large',
-                rounded: false,
-                avatarStyle: { borderRadius: 20 },
-                overlayContainerStyle: { backgroundColor: 'transparent' },
-              }}
-              subtitle={item.barcode}
-              subtitleStyle={{ marginTop: 10 }}
-              chevron
-              bottomDivider
-              rightIcon={(
-                <View>
-                  {this.state.isEditIconsVisible
-                    ? (
-                      <View>
-                        <Icon
-                          reverse
-                          name="delete"
-                          type="material-community"
-                          color="#517fa4"
-                          size={16}
-                          onPress={() => {
-                            Alert.alert(
-                              'Confirmation de suppression',
-                              'Voulez-vous supprimer ce produit de votre liste ?',
-                              [
-                                {
-                                  text: 'Non',
-                                  style: 'cancel',
-                                },
-                                {
-                                  text: 'Oui',
-                                  onPress: () => {
-                                    const foodName = item.product_name_fr !== undefined ? item.product_name_fr : '';
-                                    const foodListTemp = screenProps.foodList;
-                                    const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === item.barcode);
-                                    foodListTemp.splice(foodListItemIndex, 1);
-                                    screenProps.updateFoodList(foodListTemp);
-                                    storeData('foodList', foodListTemp);
-                                    Toast.show(`Le produit ${foodName} a bien été supprimée`);
-                                    PushNotification.cancelLocalNotifications({ id: `${item.barcode.slice(0, 8)}1` });
-                                    PushNotification.cancelLocalNotifications({ id: `${item.barcode.slice(0, 8)}2` });
-                                  },
-                                },
-                              ],
-                              { cancelable: true },
-                            );
-                          }}
-                        />
-                        <Icon
-                          reverse
-                          name="minus"
-                          type="material-community"
-                          color="#517fa4"
-                          size={16}
-                          onPress={() => {
-                            this.foodListItem = item;
-                            this.setState({ isRemoveDialogVisible: true });
-                          }}
-                        />
-                        <Icon
-                          reverse
-                          name="plus"
-                          type="material-community"
-                          color="#517fa4"
-                          size={16}
-                          onPress={() => {
-                            this.foodListItem = item;
-                            this.setState({ isAddDialogVisible: true });
-                          }}
-                        />
-                      </View>
-                    )
-                    : <View />
+              screenProps.foodList.map(item => (
+                <ListItem
+                  key={item.barcode}
+                  title={item.name}
+                  titleStyle={{ fontSize: 20 }}
+                  leftAvatar={{
+                    source: item.imageFront !== undefined
+                      ? { uri: item.imageFront }
+                      : require('../assets/noPicture.png'),
+                    size: 'large',
+                    rounded: false,
+                    avatarStyle: { borderRadius: 20 },
+                    overlayContainerStyle: { backgroundColor: 'transparent' },
+                  }}
+                  subtitle={item.barcode}
+                  subtitleStyle={{ marginTop: 10 }}
+                  chevron
+                  bottomDivider
+                  rightIcon={(
+                    <View>
+                      {this.state.isEditIconsVisible
+                        ? (
+                          <View>
+                            <Icon
+                              reverse
+                              name="delete"
+                              type="material-community"
+                              color="#517fa4"
+                              size={16}
+                              onPress={() => {
+                                Alert.alert(
+                                  'Confirmation de suppression',
+                                  'Voulez-vous supprimer ce produit de votre liste ?',
+                                  [
+                                    {
+                                      text: 'Non',
+                                      style: 'cancel',
+                                    },
+                                    {
+                                      text: 'Oui',
+                                      onPress: () => {
+                                        const foodName = item.product_name_fr !== undefined ? item.product_name_fr : '';
+                                        const foodListTemp = _.cloneDeep(screenProps.foodList);
+                                        const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === item.barcode);
+                                        foodListTemp.splice(foodListItemIndex, 1);
+                                        console.log(`je passe foodlisttemp ${JSON.stringify(foodListTemp)}`);
+                                        storeData('foodList', foodListTemp);
+                                        Toast.show(`Le produit ${foodName} a bien été supprimée`);
+                                        PushNotification.cancelLocalNotifications({ id: `${item.barcode.slice(0, 8)}1` });
+                                        PushNotification.cancelLocalNotifications({ id: `${item.barcode.slice(0, 8)}2` });
+                                      },
+                                    },
+                                  ],
+                                  { cancelable: true },
+                                );
+                              }}
+                            />
+                            <Icon
+                              reverse
+                              name="minus"
+                              type="material-community"
+                              color="#517fa4"
+                              size={16}
+                              onPress={() => {
+                                this.foodListItem = item;
+                                this.setState({ isRemoveDialogVisible: true });
+                              }}
+                            />
+                            <Icon
+                              reverse
+                              name="plus"
+                              type="material-community"
+                              color="#517fa4"
+                              size={16}
+                              onPress={() => {
+                                this.foodListItem = item;
+                                this.setState({ isAddDialogVisible: true });
+                              }}
+                            />
+                          </View>
+                        )
+                        : <View />
 
                  }
 
-                </View>
+                    </View>
               )}
-              badge={{ value: `x ${item.quantity}`, badgeStyle: { backgroundColor: '#517fa4', height: 25 }, textStyle: { fontSize: 18 } }}
+                  badge={{ value: `x ${item.quantity}`, badgeStyle: { backgroundColor: '#517fa4', height: 25 }, textStyle: { fontSize: 18 } }}
 
-              onPress={() => navigation.navigate('FoodDetails', { barcode: item.barcode })}
-            />
-          ))
+                  onPress={() => navigation.navigate('FoodDetails', { barcode: item.barcode })}
+                />
+              ))
+
+
         }
         </ScrollView>
         {/*            TODO REWORK

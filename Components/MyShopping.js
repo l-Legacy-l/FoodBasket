@@ -11,7 +11,7 @@ export default class MyShopping extends Component {
     const { params = {} } = navigation.state;
 
     // Edit button is useless if there is no food
-    if (params.shoppingList !== undefined && params.shoppingList.length > 0) {
+    if (params.shoppingList && params.shoppingList.length > 0) {
       return {
         headerRight:
   <View style={{ flexDirection: 'row' }}>
@@ -66,6 +66,14 @@ export default class MyShopping extends Component {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.screenProps.shoppingList !== nextProps.screenProps.shoppingList) {
+      this.props.navigation.setParams({
+        shoppingList: nextProps.screenProps.shoppingList,
+      });
+    }
+  }
+
 
   sendInput = (inputText, operation) => {
     const inputNumber = parseInt(inputText, 10);
@@ -75,7 +83,7 @@ export default class MyShopping extends Component {
       const { screenProps } = this.props;
       let foodName = '';
       foodName = this.shoppingListItem.name !== undefined ? this.shoppingListItem.name : '';
-      const shoppingListTemp = screenProps.shoppingList;
+      const shoppingListTemp = _.cloneDeep(screenProps.shoppingList);
       const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, shoppingListItem => shoppingListItem.barcode === this.shoppingListItem.barcode);
 
       let quantity = parseInt(shoppingListTemp[shoppingListItemIndex].quantity, 10);
@@ -93,7 +101,6 @@ export default class MyShopping extends Component {
         }
       }
 
-      screenProps.updateShoppingList(shoppingListTemp);
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
       storeData('shoppingList', shoppingListTemp);
       Toast.show(`La quantité de ${foodName} a bien été modifée`);
@@ -128,8 +135,8 @@ export default class MyShopping extends Component {
         {
           text: 'Oui',
           onPress: () => {
-            const shoppingListTemp = screenProps.shoppingList;
-            const foodListTemp = screenProps.foodList;
+            const shoppingListTemp = _.cloneDeep(screenProps.shoppingList);
+            const foodListTemp = _.cloneDeep(screenProps.foodList);
 
             shoppingListTemp.forEach((shoppingListItem) => {
               let matchFood = _.find(foodListTemp, foodListItem => foodListItem.barcode === shoppingListItem.barcode);
@@ -140,10 +147,8 @@ export default class MyShopping extends Component {
               }
               matchFood = {};
             });
-            screenProps.updateFoodList(foodListTemp);
             storeData('foodList', foodListTemp);
             shoppingListTemp.length = 0;
-            screenProps.updateShoppingList(shoppingListTemp);
             storeData('shoppingList', shoppingListTemp);
             Toast.show('Le transfert a bien été effectué');
           },
@@ -155,7 +160,7 @@ export default class MyShopping extends Component {
 
 deleteAllShoppingList = () => {
   const { screenProps } = this.props;
-  const shoppingListTemp = screenProps.shoppingList;
+  const shoppingListTemp = _.cloneDeep(screenProps.shoppingList);
 
 
   Alert.alert(
@@ -170,8 +175,6 @@ deleteAllShoppingList = () => {
         text: 'Oui',
         onPress: () => {
           shoppingListTemp.length = 0;
-
-          screenProps.updateShoppingList(shoppingListTemp);
           storeData('shoppingList', shoppingListTemp);
         },
       },
@@ -186,93 +189,94 @@ render() {
     <View>
       <ScrollView>
         {
-          screenProps.shoppingList.map(item => (
-            <ListItem
-              key={item.barcode}
-              title={item.name}
-              titleStyle={{ fontSize: 20 }}
-              leftAvatar={{
-                source: item.imageFront !== undefined
-                  ? { uri: item.imageFront }
-                  : require('../assets/noPicture.png'),
-                size: 'large',
-                rounded: false,
-                avatarStyle: { borderRadius: 20 },
-                overlayContainerStyle: { backgroundColor: 'transparent' },
-              }}
-              subtitle={item.barcode}
-              subtitleStyle={{ marginTop: 10 }}
-              bottomDivider
-              rightIcon={(
-                <View>
-                  {this.state.isEditIconsVisible
-                    ? (
-                      <View>
-                        <Icon
-                          reverse
-                          name="delete"
-                          type="material-community"
-                          color="#517fa4"
-                          size={16}
-                          onPress={() => {
-                            Alert.alert(
-                              'Confirmation de suppression',
-                              'Voulez-vous supprimer ce produit de votre liste de courses ?',
-                              [
-                                {
-                                  text: 'Non',
-                                  style: 'cancel',
-                                },
-                                {
-                                  text: 'Oui',
-                                  onPress: () => {
-                                    let foodName = '';
-                                    foodName = item.product_name_fr !== undefined ? item.product_name_fr : '';
-                                    const shoppingListTemp = screenProps.shoppingList;
-                                    const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, shoppingListItem => shoppingListItem.barcode === item.barcode);
-                                    shoppingListTemp.splice(shoppingListItemIndex, 1);
-                                    screenProps.updateShoppingList(shoppingListTemp);
-                                    storeData('shoppingList', shoppingListTemp);
-                                    Toast.show(`Le produit ${foodName} a bien été supprimée`);
-                                  },
-                                },
-                              ],
-                              { cancelable: true },
-                            );
-                          }}
-                        />
-                        <Icon
-                          reverse
-                          name="minus"
-                          type="material-community"
-                          color="#517fa4"
-                          size={16}
-                          onPress={() => {
-                            this.shoppingListItem = item;
-                            this.setState({ isRemoveDialogVisible: true });
-                          }}
-                        />
-                        <Icon
-                          reverse
-                          name="plus"
-                          type="material-community"
-                          color="#517fa4"
-                          size={16}
-                          onPress={() => {
-                            this.shoppingListItem = item;
-                            this.setState({ isAddDialogVisible: true });
-                          }}
-                        />
-                      </View>
-                    )
-                    : <View />
+ screenProps.shoppingList.map(item => (
+   <ListItem
+     key={item.barcode}
+     title={item.name}
+     titleStyle={{ fontSize: 20 }}
+     leftAvatar={{
+       source: item.imageFront !== undefined
+         ? { uri: item.imageFront }
+         : require('../assets/noPicture.png'),
+       size: 'large',
+       rounded: false,
+       avatarStyle: { borderRadius: 20 },
+       overlayContainerStyle: { backgroundColor: 'transparent' },
+     }}
+     subtitle={item.barcode}
+     subtitleStyle={{ marginTop: 10 }}
+     bottomDivider
+     rightIcon={(
+       <View>
+         {this.state.isEditIconsVisible
+           ? (
+             <View>
+               <Icon
+                 reverse
+                 name="delete"
+                 type="material-community"
+                 color="#517fa4"
+                 size={16}
+                 onPress={() => {
+                   Alert.alert(
+                     'Confirmation de suppression',
+                     'Voulez-vous supprimer ce produit de votre liste de courses ?',
+                     [
+                       {
+                         text: 'Non',
+                         style: 'cancel',
+                       },
+                       {
+                         text: 'Oui',
+                         onPress: () => {
+                           let foodName = '';
+                           foodName = item.product_name_fr !== undefined ? item.product_name_fr : '';
+                           const shoppingListTemp = _.cloneDeep(screenProps.shoppingList);
+                           const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, shoppingListItem => shoppingListItem.barcode === item.barcode);
+                           shoppingListTemp.splice(shoppingListItemIndex, 1);
+                           storeData('shoppingList', shoppingListTemp);
+                           Toast.show(`Le produit ${foodName} a bien été supprimée`);
+                         },
+                       },
+                     ],
+                     { cancelable: true },
+                   );
+                 }}
+               />
+               <Icon
+                 reverse
+                 name="minus"
+                 type="material-community"
+                 color="#517fa4"
+                 size={16}
+                 onPress={() => {
+                   this.shoppingListItem = item;
+                   this.setState({ isRemoveDialogVisible: true });
+                 }}
+               />
+               <Icon
+                 reverse
+                 name="plus"
+                 type="material-community"
+                 color="#517fa4"
+                 size={16}
+                 onPress={() => {
+                   this.shoppingListItem = item;
+                   this.setState({ isAddDialogVisible: true });
+                 }}
+               />
+             </View>
+           )
+           : <View />
                  }
 
-                </View>
+       </View>
               )}
-              badge={{ value: `x ${item.quantity}`, badgeStyle: { backgroundColor: '#517fa4', height: 25 }, textStyle: { fontSize: 18 } }}
-            />
-          ))
+     badge={{ value: `x ${item.quantity}`, badgeStyle: { backgroundColor: '#517fa4', height: 25 }, textStyle: { fontSize: 18 } }}
+   />
+ ))
+
+
         }
       </ScrollView>
       {/*            TODO REWORK

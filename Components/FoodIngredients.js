@@ -36,6 +36,7 @@ export default class FoodIngredients extends Component {
     this.state = {
       isVisible: false,
     };
+    console.log(`je passe nutrients ${JSON.stringify(this.food.nutrients)}`);
   }
 
   render() {

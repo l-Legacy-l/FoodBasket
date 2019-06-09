@@ -66,7 +66,7 @@ export default class FoodOptions extends Component {
     // Check if inputText is a valid number
     if (!Number.isNaN(inputNumber) && inputNumber >= 1 && inputNumber <= 20) {
       const { screenProps } = this.props;
-      const foodListTemp = screenProps.foodList;
+      const foodListTemp = _.cloneDeep(screenProps.foodList);
       const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
       const food = foodListTemp[foodListItemIndex];
       let quantity = parseInt(this.food.quantity, 10);
@@ -92,7 +92,6 @@ export default class FoodOptions extends Component {
         }
       }
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
-      screenProps.updateFoodList(foodListTemp);
       storeData('foodList', foodListTemp);
       Toast.show(`La quantité de ${this.foodName} a bien été modifée`);
     } else {
@@ -103,7 +102,7 @@ export default class FoodOptions extends Component {
 
   addFoodToShoppingList = (inputText, operation) => {
     const { screenProps } = this.props;
-    const shoppingListTemp = screenProps.shoppingList;
+    const shoppingListTemp = _.cloneDeep(screenProps.shoppingList);
     const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, shoppingListItem => shoppingListItem.barcode === this.food.barcode);
     const foodToAdd = this.food;
     const quantity = parseInt(inputText, 10);
@@ -111,13 +110,11 @@ export default class FoodOptions extends Component {
       foodToAdd.quantity = quantity;
       shoppingListTemp.push(foodToAdd);
       this.setState({ isAddShoppingVisible: false });
-      screenProps.updateShoppingList(shoppingListTemp);
       storeData('shoppingList', shoppingListTemp);
     } else if (operation === 'manuel') {
       // manuel + there is already the product
       shoppingListTemp[shoppingListItemIndex].quantity = quantity + parseInt(shoppingListTemp[shoppingListItemIndex].quantity, 10);
       this.setState({ isAddShoppingVisible: false });
-      screenProps.updateShoppingList(shoppingListTemp);
       storeData('shoppingList', shoppingListTemp);
     }
 
@@ -237,9 +234,8 @@ export default class FoodOptions extends Component {
               onDateChange={(date) => {
                 this.setState({ date });
                 const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
-                const foodListTemp = screenProps.foodList;
+                const foodListTemp = _.cloneDeep(screenProps.foodList);
                 foodListTemp[foodListItemIndex].expirationDate = date;
-                screenProps.updateFoodList(foodListTemp);
                 storeData('foodList', foodListTemp);
 
                 PushNotification.localNotificationSchedule({
@@ -311,10 +307,9 @@ export default class FoodOptions extends Component {
               onSubmitEditing={(value) => {
                 const inputValue = value.nativeEvent.text;
                 if (!Number.isNaN(inputValue) && inputValue >= 1 && inputValue <= 20) {
-                  const foodListTemp = screenProps.foodList;
+                  const foodListTemp = _.cloneDeep(screenProps.foodList);
                   const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
                   foodListTemp[foodListItemIndex].minQuantity = value.nativeEvent.text;
-                  screenProps.updateFoodList(foodListTemp);
                   storeData('foodList', foodListTemp);
                   if (parseInt(value.nativeEvent.text, 10) >= parseInt(this.food.quantity, 10)) {
                     this.addFoodToShoppingList(1, 'automatique');
@@ -359,10 +354,9 @@ export default class FoodOptions extends Component {
                     {
                       text: 'Oui',
                       onPress: () => {
-                        const foodListTemp = screenProps.foodList;
+                        const foodListTemp = _.cloneDeep(screenProps.foodList);
                         const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
                         foodListTemp.splice(foodListItemIndex, 1);
-                        screenProps.updateFoodList(foodListTemp);
                         storeData('foodList', foodListTemp);
                         Toast.show(`Le produit ${this.foodName} a bien été supprimée`);
                         this.props.navigation.goBack(null);

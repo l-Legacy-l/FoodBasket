@@ -87,7 +87,6 @@ class FoodItem extends React.Component {
       foodName = food.product_name_fr !== undefined ? food.product_name_fr : '';
       const foodListTemp = _.cloneDeep(screenProps.foodList);
       const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
-      // console.log(`je passe save ${JSON.stringify(screenProps.updateFoodList(foodListTemp))}`);
 
       // Check if there is already this product in the list
       if (foodListItemIndex !== -1) {
@@ -104,7 +103,6 @@ class FoodItem extends React.Component {
             foodListTemp[foodListItemIndex].quantity = quantity;
           }
         }
-        screenProps.updateFoodList(foodListTemp);
         this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
         storeData('foodList', foodListTemp);
         Toast.show(`La quantité de ${foodName} a bien été modifée`);
@@ -119,7 +117,7 @@ class FoodItem extends React.Component {
         foodItem.imageNutrients = food.image_nutrition_url;
         foodItem.ingredients = food.ingredients_text_fr;
         foodItem.name = food.product_name_fr;
-        if (food.nutriments.length > 0) {
+        if (Object.keys(food.nutriments).length > 0) {
           foodItem.nutrients = food.nutriments;
         }
         foodItem.nutriscore = food.nutrition_grades;
@@ -128,7 +126,6 @@ class FoodItem extends React.Component {
 
         foodListTemp.push(foodItem);
 
-        screenProps.updateFoodList(foodListTemp);
         this.setState({ isAddDialogVisible: false });
         storeData('foodList', foodListTemp);
         Toast.show(`L'aliment${` ${foodName}`} a bien été ajoutée à la liste`);
@@ -192,7 +189,6 @@ class FoodItem extends React.Component {
                                 const foodListTemp = _.cloneDeep(screenProps.foodList);
                                 const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
                                 foodListTemp.splice(foodListItemIndex, 1);
-                                screenProps.updateFoodList(foodListTemp);
                                 storeData('foodList', foodListTemp);
                                 Toast.show(`Le produit ${foodName} a bien été supprimée`);
                               },

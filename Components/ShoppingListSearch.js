@@ -50,7 +50,7 @@ export default class componentName extends Component {
       const { screenProps } = this.props;
       const foodName = this.food.product_name_fr !== undefined ? this.food.product_name_fr : '';
 
-      const shoppingListTemp = screenProps.shoppingList;
+      const shoppingListTemp = _.cloneDeep(screenProps.shoppingList);
       const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, foodListItem => foodListItem.barcode === this.food.code);
 
       if (shoppingListItemIndex !== -1) {
@@ -69,7 +69,7 @@ export default class componentName extends Component {
         shoppingItem.imageNutrients = this.food.image_nutrition_url;
         shoppingItem.ingredients = this.food.ingredients_text_fr;
         shoppingItem.name = this.food.product_name_fr;
-        if (this.food.nutriments.length > 0) {
+        if (Object.keys(this.food.nutriments).length > 0) {
           shoppingItem.nutrients = this.food.nutriments;
         }
         shoppingItem.nutriscore = this.food.nutrition_grades;
@@ -81,7 +81,6 @@ export default class componentName extends Component {
         Toast.show(`L'aliment ${`${foodName}`} a bien été ajoutée à la liste de course`);
       }
 
-      screenProps.updateShoppingList(shoppingListTemp);
       this.setState({ isDialogVisible: false });
       storeData('shoppingList', shoppingListTemp);
     }

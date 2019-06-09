@@ -85,17 +85,14 @@ export default class Form extends Component {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        getData('foodList').then((res) => {
-          console.log(`je passe foodlist ${JSON.stringify(res)}`);
-          this.props.screenProps.updateFoodList(res);
-        });
+        getData('foodList').then(res => this.props.screenProps.updateFoodList(res));
         getData('shoppingList').then(res => this.props.screenProps.updateShoppingList(res));
-        // Synchronize data between all the device on the same account
+        // Synchronize data between all the device on the same account when the list is updated
         const { uid } = firebase.auth().currentUser;
-        const foodListref = firebase.database().ref(`/foodList/users/${uid}`);
-        foodListref.on('value', snapshot => this.props.screenProps.updateFoodList(snapshot.val()));
+        const foodListRef = firebase.database().ref(`/foodList/users/${uid}`);
+        foodListRef.on('value', snapshot => this.props.screenProps.updateFoodList(snapshot.val() === null ? [] : snapshot.val()));
         const shoppingListRef = firebase.database().ref(`/shoppingList/users/${uid}`);
-        shoppingListRef.on('value', snapshot => this.props.screenProps.updateShoppingList(snapshot.val()));
+        shoppingListRef.on('value', snapshot => this.props.screenProps.updateShoppingList(snapshot.val() === null ? [] : snapshot.val()));
       })
       .then(this.props.navigate)
       .catch(error => this.translateErrorMessage(error.message));
