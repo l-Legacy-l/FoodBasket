@@ -90,6 +90,12 @@ export default class Form extends Component {
           this.props.screenProps.updateFoodList(res);
         });
         getData('shoppingList').then(res => this.props.screenProps.updateShoppingList(res));
+        // Synchronize data between all the device on the same account
+        const { uid } = firebase.auth().currentUser;
+        const foodListref = firebase.database().ref(`/foodList/users/${uid}`);
+        foodListref.on('value', snapshot => this.props.screenProps.updateFoodList(snapshot.val()));
+        const shoppingListRef = firebase.database().ref(`/shoppingList/users/${uid}`);
+        shoppingListRef.on('value', snapshot => this.props.screenProps.updateShoppingList(snapshot.val()));
       })
       .then(this.props.navigate)
       .catch(error => this.translateErrorMessage(error.message));
