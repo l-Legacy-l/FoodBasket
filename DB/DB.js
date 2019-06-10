@@ -1,5 +1,6 @@
 import { AsyncStorage } from 'react-native';
 import firebase from 'react-native-firebase';
+import NetInfo from '@react-native-community/netinfo';
 
 const alphabetize = require('alphabetize-object-keys');
 
@@ -41,30 +42,21 @@ export const storeData = async (key, data) => {
   }
 };
 
-export const getData = key => getOfflineData(key).then(data => getOnlineData(key).then((res) => {
-  if ((res !== null)) {
-    const offlineData = data;
-    let onlineData = res;
-    console.log(`je passe onlinedata ${JSON.stringify(onlineData)}`);
+export const getData = key => getOfflineData(key).then(data => NetInfo.isConnected.fetch().then((isConnected) => {
+  if (isConnected) {
+    return getOnlineData(key).then((res) => {
+      const offlineData = data === null ? [] : data;
+      let onlineData = res === null ? [] : res;
 
-    if (onlineData !== null) {
       onlineData = onlineData.map(element => alphabetize(element));
-    }
 
-    /*     console.log(`je passe offlinedata ${offlineData.toString()}`);
-    console.log(`je passe onlinedata ${JSON.stringify(onlineData)}`); */
-
-    /*       console.log(`je passe comparaison ${JSON.stringify(res)} res ${key}`);
-      console.log(`je passe comparaison ${data.toString()} data ${key}`); */
-
-    if (offlineData !== null) {
       if (JSON.stringify(onlineData) !== offlineData.toString()) {
-        console.log('je passe c differenttt');
         AsyncStorage.setItem(key, JSON.stringify(onlineData));
       }
-    }
 
-    return onlineData;
+      return onlineData;
+    });
   }
-  return [];
+
+  return data === null ? [] : JSON.parse(data);
 }));
