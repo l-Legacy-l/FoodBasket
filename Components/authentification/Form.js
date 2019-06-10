@@ -52,6 +52,22 @@ export default class Form extends Component {
     };
   }
 
+    componentDidMount = () => {
+      // Automatically loged if the user is not disconected
+      if (firebase.auth().currentUser) {
+        getData('foodList').then(res => this.props.screenProps.updateFoodList(res));
+        getData('shoppingList').then(res => this.props.screenProps.updateShoppingList(res));
+        // Synchronize data between all the device on the same account when the list is updated
+        const { uid } = firebase.auth().currentUser;
+        const foodListRef = firebase.database().ref(`/foodList/users/${uid}`);
+        foodListRef.on('value', snapshot => this.props.screenProps.updateFoodList(snapshot.val() === null ? [] : snapshot.val()));
+        const shoppingListRef = firebase.database().ref(`/shoppingList/users/${uid}`);
+        shoppingListRef.on('value', snapshot => this.props.screenProps.updateShoppingList(snapshot.val() === null ? [] : snapshot.val()));
+
+        this.props.navigate();
+      }
+    };
+
   translateErrorMessage = (message) => {
     let frMessage = message;
     if (message.includes('given password')) {

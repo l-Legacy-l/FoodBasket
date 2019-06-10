@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { View, StyleSheet, ImageBackground } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
+import firebase from 'react-native-firebase';
 
 const styles = StyleSheet.create(
   {
@@ -14,6 +15,10 @@ const styles = StyleSheet.create(
 );
 
 export default class Search extends PureComponent {
+  componentWillUnmount = () => {
+    firebase.auth().signOut();
+  };
+
   render() {
     const { navigation } = this.props;
 
@@ -35,7 +40,7 @@ export default class Search extends PureComponent {
                 color="white"
               />
           )}
-            title="Scanner un produit pour votre liste d'aliments"
+            title="Scanner un produit pour votre stock de nourriture"
             buttonStyle={styles.buttonStyles}
             titleStyle={{ marginRight: 30 }}
             containerStyle={{ alignItems: 'center' }}
