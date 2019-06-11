@@ -4,6 +4,7 @@ import {
 } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import Search from '../Components/Search';
+import Settings from '../Components/Settings';
 import SignUp from '../Components/authentification/SignUp';
 import SignIn from '../Components/authentification/SignIn';
 import FoodListSearch from '../Components/FoodListSearch';
@@ -46,6 +47,13 @@ const SearchStackNavigator = createStackNavigator({
     screen: Search,
     navigationOptions: {
       header: null,
+    },
+  },
+
+  Settings: {
+    screen: Settings,
+    navigationOptions: {
+      title: 'Paramètres de l\'application',
     },
   },
 
@@ -134,7 +142,7 @@ const MainTabNavigator = createBottomTabNavigator({
   MyFoods: {
     screen: MyFoodsStackNavigator,
     navigationOptions: {
-      title: 'Stock de nourritures',
+      title: 'Stock de nourriture',
       tabBarIcon: <Icon
         name="food-fork-drink"
         type="material-community"

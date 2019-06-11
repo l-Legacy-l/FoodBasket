@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
-import { View, StyleSheet, ImageBackground } from 'react-native';
+import {
+  View, StyleSheet, ImageBackground, TouchableOpacity,
+} from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import firebase from 'react-native-firebase';
 
@@ -29,7 +31,20 @@ export default class Search extends PureComponent {
         style={{ width: '100%', height: '100%' }}
       >
 
-        <View style={{ marginTop: '40%' }}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Settings')}
+          style={{ alignSelf: 'flex-start', margin: 10 }}
+        >
+          <Icon
+            name="settings"
+            type="material-community"
+            size={40}
+            color="#517fa4"
+          />
+        </TouchableOpacity>
+
+
+        <View style={{ marginTop: '30%' }}>
           <Button
             icon={(
               <Icon

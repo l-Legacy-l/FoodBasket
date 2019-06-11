@@ -1,6 +1,6 @@
 import React from 'react';
 import Navigation from './Navigation/Navigation';
-// import { getData } from './DB/DB';
+import { getSettings } from './DB/DB';
 
 
 export default class App extends React.Component {
@@ -9,14 +9,14 @@ export default class App extends React.Component {
     this.state = {
       foodList: [],
       shoppingList: [],
+      settingsObject: {},
     };
     console.disableYellowBox = true;
   }
 
-  /*   componentDidMount = () => {
-    getData('foodList').then(res => this.setState({ foodList: res }));
-    getData('shoppingList').then(res => this.setState({ shoppingList: res }));
-  }; */
+  componentDidMount = () => {
+    getSettings().then(res => this.setState({ settingsObject: res }));
+  };
 
   updateFoodList = (foodList) => {
     this.setState({ foodList });
@@ -24,6 +24,10 @@ export default class App extends React.Component {
 
   updateShoppingList = (shoppingList) => {
     this.setState({ shoppingList });
+  }
+
+  updateSettingsObject = (settingsObject) => {
+    this.setState({ settingsObject });
   }
 
   render() {
@@ -34,6 +38,8 @@ export default class App extends React.Component {
           updateFoodList: this.updateFoodList,
           shoppingList: this.state.shoppingList,
           updateShoppingList: this.updateShoppingList,
+          settingsObject: this.state.settingsObject,
+          updateSettingsObject: this.updateSettingsObject,
         }}
       />
     );
