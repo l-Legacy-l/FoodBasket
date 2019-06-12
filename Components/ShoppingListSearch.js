@@ -6,6 +6,7 @@ import _ from 'lodash';
 import Toast from 'react-native-simple-toast';
 import { searchFoodByName } from '../API/OFFApi';
 import { storeData } from '../DB/DB';
+import sort from '../Sortings/Sorting';
 
 export default class componentName extends Component {
   constructor(props) {
@@ -76,13 +77,13 @@ export default class componentName extends Component {
         shoppingItem.productWeight = this.food.quantity;
         shoppingItem.quantity = inputText;
 
-
         shoppingListTemp.push(shoppingItem);
         Toast.show(`L'aliment ${`${foodName}`} a bien été ajoutée à la liste de course`);
       }
 
       this.setState({ isDialogVisible: false });
-      storeData('shoppingList', shoppingListTemp);
+      const sortedShoppingListTemp = sort(shoppingListTemp, screenProps.settingsObject.idShoppingListSort);
+      storeData('shoppingList', sortedShoppingListTemp);
     }
   }
 

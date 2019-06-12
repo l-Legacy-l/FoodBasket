@@ -2,7 +2,6 @@ import React from 'react';
 import Navigation from './Navigation/Navigation';
 import { getSettings } from './DB/DB';
 
-
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -10,12 +9,13 @@ export default class App extends React.Component {
       foodList: [],
       shoppingList: [],
       settingsObject: {},
+      finishedFetching: false,
     };
     console.disableYellowBox = true;
   }
 
   componentDidMount = () => {
-    getSettings().then(res => this.setState({ settingsObject: res }));
+    getSettings().then(res => this.setState({ settingsObject: res, finishedFetching: true }));
   };
 
   updateFoodList = (foodList) => {
@@ -31,7 +31,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    return (
+    return this.state.finishedFetching ? (
       <Navigation
         screenProps={{
           foodList: this.state.foodList,
@@ -42,6 +42,6 @@ export default class App extends React.Component {
           updateSettingsObject: this.updateSettingsObject,
         }}
       />
-    );
+    ) : null;
   }
 }

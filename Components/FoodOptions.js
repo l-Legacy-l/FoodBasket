@@ -12,6 +12,7 @@ import DialogInput from 'react-native-dialog-input';
 import DatePicker from 'react-native-datepicker';
 import PushNotification from 'react-native-push-notification';
 import { storeData } from '../DB/DB';
+import sort from '../Sortings/Sorting';
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -92,7 +93,8 @@ export default class FoodOptions extends Component {
         }
       }
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
-      storeData('foodList', foodListTemp);
+      const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
+      storeData('foodList', sortedFoodListTemp);
       Toast.show(`La quantité de ${this.foodName} a bien été modifée`);
     } else {
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
@@ -110,12 +112,14 @@ export default class FoodOptions extends Component {
       foodToAdd.quantity = quantity;
       shoppingListTemp.push(foodToAdd);
       this.setState({ isAddShoppingVisible: false });
-      storeData('shoppingList', shoppingListTemp);
+      const sortedShoppingListTemp = sort(shoppingListTemp, screenProps.settingsObject.idShoppingListSort);
+      storeData('shoppingList', sortedShoppingListTemp);
     } else if (operation === 'manuel') {
       // manuel + there is already the product
       shoppingListTemp[shoppingListItemIndex].quantity = quantity + parseInt(shoppingListTemp[shoppingListItemIndex].quantity, 10);
       this.setState({ isAddShoppingVisible: false });
-      storeData('shoppingList', shoppingListTemp);
+      const sortedShoppingListTemp = sort(shoppingListTemp, screenProps.settingsObject.idShoppingListSort);
+      storeData('shoppingList', sortedShoppingListTemp);
     }
 
     Toast.show(`Le produit ${this.foodName}a bien été ajouté à votre liste de course`);
@@ -236,7 +240,8 @@ export default class FoodOptions extends Component {
                 const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
                 const foodListTemp = _.cloneDeep(screenProps.foodList);
                 foodListTemp[foodListItemIndex].expirationDate = date;
-                storeData('foodList', foodListTemp);
+                const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
+                storeData('foodList', sortedFoodListTemp);
 
                 PushNotification.localNotificationSchedule({
                   /* Android Only Properties */
@@ -310,7 +315,8 @@ export default class FoodOptions extends Component {
                   const foodListTemp = _.cloneDeep(screenProps.foodList);
                   const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
                   foodListTemp[foodListItemIndex].minQuantity = value.nativeEvent.text;
-                  storeData('foodList', foodListTemp);
+                  const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
+                  storeData('foodList', sortedFoodListTemp);
                   if (parseInt(value.nativeEvent.text, 10) >= parseInt(this.food.quantity, 10)) {
                     this.addFoodToShoppingList(1, 'automatique');
                   }
@@ -357,7 +363,8 @@ export default class FoodOptions extends Component {
                         const foodListTemp = _.cloneDeep(screenProps.foodList);
                         const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
                         foodListTemp.splice(foodListItemIndex, 1);
-                        storeData('foodList', foodListTemp);
+                        const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
+                        storeData('foodList', sortedFoodListTemp);
                         Toast.show(`Le produit ${this.foodName} a bien été supprimée`);
                         this.props.navigation.goBack(null);
                         PushNotification.cancelLocalNotifications({ id: `${this.food.barcode.slice(0, 8)}1` });

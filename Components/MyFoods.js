@@ -6,11 +6,11 @@ import Toast from 'react-native-simple-toast';
 import PushNotification from 'react-native-push-notification';
 import _ from 'lodash';
 import { storeData } from '../DB/DB';
+import sort from '../Sortings/Sorting';
 
 export default class MyFoods extends Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
-    console.log(`je passe foodList ${JSON.stringify(params.foodList)}`);
 
     // Edit button is useless if there is no food
     if (params.foodList && params.foodList.length > 0) {
@@ -63,7 +63,6 @@ export default class MyFoods extends Component {
       const { screenProps } = this.props;
       const foodName = this.foodListItem.name !== undefined ? this.foodListItem.name : '';
       const foodListTemp = _.cloneDeep(screenProps.foodList);
-      console.log(`je passe foodlisttemp input ${JSON.stringify(foodListTemp)}`);
       const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.foodListItem.barcode);
       const food = foodListTemp[foodListItemIndex];
       let quantity = parseInt(food.quantity, 10);
@@ -87,7 +86,8 @@ export default class MyFoods extends Component {
       }
 
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
-      storeData('foodList', foodListTemp);
+      const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
+      storeData('foodList', sortedFoodListTemp);
       Toast.show(`La quantité de ${foodName} a bien été modifée`);
     } else {
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
@@ -105,7 +105,8 @@ export default class MyFoods extends Component {
         const foodToAdd = this.foodListItem;
         foodToAdd.quantity = 1;
         shoppingListTemp.push(foodToAdd);
-        storeData('shoppingList', shoppingListTemp);
+        const sortedShoppingListTemp = sort(shoppingListTemp, screenProps.settingsObject.idShoppingListSort);
+        storeData('shoppingList', sortedShoppingListTemp);
       }
     }
 
@@ -123,7 +124,6 @@ export default class MyFoods extends Component {
 
   render() {
     const { screenProps, navigation } = this.props;
-    console.log(`je passe foodList render ${JSON.stringify(this.props.screenProps.foodList)}`);
 
     return (
       <View>
@@ -174,8 +174,8 @@ export default class MyFoods extends Component {
                                         const foodListTemp = _.cloneDeep(screenProps.foodList);
                                         const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === item.barcode);
                                         foodListTemp.splice(foodListItemIndex, 1);
-                                        console.log(`je passe foodlisttemp ${JSON.stringify(foodListTemp)}`);
-                                        storeData('foodList', foodListTemp);
+                                        const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
+                                        storeData('foodList', sortedFoodListTemp);
                                         Toast.show(`Le produit ${foodName} a bien été supprimée`);
                                         PushNotification.cancelLocalNotifications({ id: `${item.barcode.slice(0, 8)}1` });
                                         PushNotification.cancelLocalNotifications({ id: `${item.barcode.slice(0, 8)}2` });

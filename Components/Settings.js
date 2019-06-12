@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import {
-  ScrollView, Text, StyleSheet,
+  ScrollView, Text, StyleSheet, View,
 } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import _ from 'lodash';
 import RNPickerSelect from 'react-native-picker-select';
-import { storeSettings } from '../DB/DB';
+import { storeSettings, storeOfflineData } from '../DB/DB';
+import sort from '../Sortings/Sorting';
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 40,
-    paddingHorizontal: 10,
     flex: 1,
   },
   sectionContainer: {
@@ -54,11 +53,11 @@ const pickerSelectStyles = StyleSheet.create({
 
 const sorts = [
   {
-    label: 'Alphabétique',
-    value: 'Alphabétique',
+    label: 'Par nom',
+    value: 'Nom',
   },
   {
-    label: 'Quantité',
+    label: 'Par quantité',
     value: 'Quantité',
   },
 ];
@@ -82,43 +81,63 @@ export default class Settings extends Component {
     }; */
     return (
       <ScrollView style={styles.container}>
-        <Text>Stock de nourriture</Text>
-        <RNPickerSelect
-          placeholder={{}}
-          items={sorts}
-          onValueChange={(value) => {
-            this.setState({
-              foodStockSort: value,
-            });
-            const { screenProps } = this.props;
-            const settingsTemp = _.cloneDeep(screenProps.settingsObject);
-            settingsTemp.foodStockSort = value;
-            screenProps.updateSettingsObject(settingsTemp);
-            storeSettings(settingsTemp);
-          }}
-          style={pickerSelectStyles}
-          value={this.state.foodStockSort}
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Configuration des triages des listes</Text>
+        </View>
+        <View style={{ margin: 10 }}>
+          <Text>Stock de nourriture</Text>
+          <RNPickerSelect
+            placeholder={{}}
+            items={sorts}
+            onValueChange={(value, index) => {
+              this.setState({
+                foodStockSort: value,
+              });
+              const { screenProps } = this.props;
+              const settingsTemp = _.cloneDeep(screenProps.settingsObject);
+              const foodListTemp = _.cloneDeep(screenProps.foodList);
+              settingsTemp.foodStockSort = value;
+              // Put an ID to call the right fonction to sort the data
+              settingsTemp.idFoodStockSort = index;
 
-        />
+              const sortedFoodListTemp = sort(foodListTemp, index);
+              screenProps.updateFoodList(sortedFoodListTemp);
+              storeOfflineData('foodList', sortedFoodListTemp);
 
-        <Text>Liste de courses</Text>
-        <RNPickerSelect
-          placeholder={{}}
-          items={sorts}
-          onValueChange={(value) => {
-            this.setState({
-              shoppingListSort: value,
-            });
+              screenProps.updateSettingsObject(settingsTemp);
+              storeSettings(settingsTemp);
+            }}
+            style={pickerSelectStyles}
+            value={this.state.foodStockSort}
+          />
 
-            const { screenProps } = this.props;
-            const settingsTemp = _.cloneDeep(screenProps.settingsObject);
-            settingsTemp.shoppingListSort = value;
-            screenProps.updateSettingsObject(settingsTemp);
-            storeSettings(settingsTemp);
-          }}
-          style={pickerSelectStyles}
-          value={this.state.shoppingListSort}
-        />
+          <Text>Liste de courses</Text>
+          <RNPickerSelect
+            placeholder={{}}
+            items={sorts}
+            onValueChange={(value, index) => {
+              this.setState({
+                shoppingListSort: value,
+              });
+
+              const { screenProps } = this.props;
+              const settingsTemp = _.cloneDeep(screenProps.settingsObject);
+              const shoppingListTemp = _.cloneDeep(screenProps.shoppingList);
+              settingsTemp.shoppingListSort = value;
+              // Put an ID to call the right fonction to sort the data
+              settingsTemp.idShoppingListSort = index;
+
+              const sortedShoppingListTemp = sort(shoppingListTemp, index);
+              screenProps.updateShoppingList(sortedShoppingListTemp);
+              storeOfflineData('shoppingList', sortedShoppingListTemp);
+
+              screenProps.updateSettingsObject(settingsTemp);
+              storeSettings(settingsTemp);
+            }}
+            style={pickerSelectStyles}
+            value={this.state.shoppingListSort}
+          />
+        </View>
       </ScrollView>
     );
   }

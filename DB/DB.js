@@ -42,6 +42,14 @@ export const storeData = async (key, data) => {
   }
 };
 
+export const storeOfflineData = async (key, data) => {
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(data));
+  } catch (error) {
+    console.log(`je passe ${error}`);
+  }
+};
+
 export const getData = key => getOfflineData(key).then(data => NetInfo.isConnected.fetch().then((isConnected) => {
   if (isConnected) {
     return getOnlineData(key).then((res) => {
@@ -74,6 +82,7 @@ export const getSettings = async () => {
   try {
     const data = await AsyncStorage.getItem('Settings');
     if (data !== null) {
+      console.log(`je passe settings ${data.toString()}`);
       return JSON.parse(data);
     }
   } catch (error) {

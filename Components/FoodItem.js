@@ -7,6 +7,7 @@ import DialogInput from 'react-native-dialog-input';
 import _ from 'lodash';
 import Toast from 'react-native-simple-toast';
 import { storeData } from '../DB/DB';
+import sort from '../Sortings/Sorting';
 
 
 const styles = StyleSheet.create(
@@ -104,7 +105,8 @@ class FoodItem extends React.Component {
           }
         }
         this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
-        storeData('foodList', foodListTemp);
+        const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
+        storeData('foodList', sortedFoodListTemp);
         Toast.show(`La quantité de ${foodName} a bien été modifée`);
       } else {
         const foodItem = {};
@@ -127,7 +129,8 @@ class FoodItem extends React.Component {
         foodListTemp.push(foodItem);
 
         this.setState({ isAddDialogVisible: false });
-        storeData('foodList', foodListTemp);
+        const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
+        storeData('foodList', sortedFoodListTemp);
         Toast.show(`L'aliment${` ${foodName}`} a bien été ajoutée à la liste`);
       }
     } else {
@@ -189,7 +192,8 @@ class FoodItem extends React.Component {
                                 const foodListTemp = _.cloneDeep(screenProps.foodList);
                                 const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
                                 foodListTemp.splice(foodListItemIndex, 1);
-                                storeData('foodList', foodListTemp);
+                                const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
+                                storeData('foodList', sortedFoodListTemp);
                                 Toast.show(`Le produit ${foodName} a bien été supprimée`);
                               },
                             },

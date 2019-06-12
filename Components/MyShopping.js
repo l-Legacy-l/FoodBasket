@@ -5,6 +5,7 @@ import DialogInput from 'react-native-dialog-input';
 import Toast from 'react-native-simple-toast';
 import _ from 'lodash';
 import { storeData } from '../DB/DB';
+import sort from '../Sortings/Sorting';
 
 export default class MyShopping extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -102,7 +103,8 @@ export default class MyShopping extends Component {
       }
 
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
-      storeData('shoppingList', shoppingListTemp);
+      const sortedShoppingListTemp = sort(shoppingListTemp, screenProps.settingsObject.idShoppingListSort);
+      storeData('shoppingList', sortedShoppingListTemp);
       Toast.show(`La quantité de ${foodName} a bien été modifée`);
     } else {
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
@@ -147,9 +149,11 @@ export default class MyShopping extends Component {
               }
               matchFood = {};
             });
-            storeData('foodList', foodListTemp);
+            const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
+            storeData('foodList', sortedFoodListTemp);
             shoppingListTemp.length = 0;
-            storeData('shoppingList', shoppingListTemp);
+            const sortedShoppingListTemp = sort(shoppingListTemp, screenProps.settingsObject.idShoppingListSort);
+            storeData('shoppingList', sortedShoppingListTemp);
             Toast.show('Le transfert a bien été effectué');
           },
         },
@@ -175,7 +179,8 @@ deleteAllShoppingList = () => {
         text: 'Oui',
         onPress: () => {
           shoppingListTemp.length = 0;
-          storeData('shoppingList', shoppingListTemp);
+          const sortedShoppingListTemp = sort(shoppingListTemp, screenProps.settingsObject.idShoppingListSort);
+          storeData('shoppingList', sortedShoppingListTemp);
         },
       },
     ],
@@ -234,7 +239,8 @@ render() {
                            const shoppingListTemp = _.cloneDeep(screenProps.shoppingList);
                            const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, shoppingListItem => shoppingListItem.barcode === item.barcode);
                            shoppingListTemp.splice(shoppingListItemIndex, 1);
-                           storeData('shoppingList', shoppingListTemp);
+                           const sortedShoppingListTemp = sort(shoppingListTemp, screenProps.settingsObject.idShoppingListSort);
+                           storeData('shoppingList', sortedShoppingListTemp);
                            Toast.show(`Le produit ${foodName} a bien été supprimée`);
                          },
                        },
