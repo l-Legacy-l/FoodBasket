@@ -24,6 +24,9 @@ project.xcworkspace
 
 # Android/IntelliJ
 #
+bin/
+android/.project
+android/app/.project
 build/
 .idea
 .gradle
