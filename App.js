@@ -15,7 +15,17 @@ export default class App extends React.Component {
   }
 
   componentDidMount = () => {
-    getSettings().then(res => this.setState({ settingsObject: res, finishedFetching: true }));
+    getSettings().then((res) => {
+      // if it's the first time the user open the app, the default values for the expiration date notification are set
+      if (!res.firstRemindTime) {
+        res.isNotificationEnabled = true;
+        res.firstRemindTime = 604800;
+        res.firstRemindTimeString = '1 semaine';
+        res.secondRemindTime = 172800;
+        res.secondRemindTimeString = '2 jours';
+      }
+      this.setState({ settingsObject: res, finishedFetching: true });
+    });
   };
 
   updateFoodList = (foodList) => {
