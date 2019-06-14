@@ -7,6 +7,7 @@ import Search from '../Components/Search';
 import Settings from '../Components/Settings';
 import SignUp from '../Components/authentification/SignUp';
 import SignIn from '../Components/authentification/SignIn';
+import Forgot from '../Components/authentification/Forgot';
 import FoodListSearch from '../Components/FoodListSearch';
 import ShoppingListSearch from '../Components/ShoppingListSearch';
 import Camera from '../Components/Camera';
@@ -173,6 +174,12 @@ const AuthentificationStackNavigator = createStackNavigator({
   },
   SignUp: {
     screen: SignUp,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  Forgot: {
+    screen: Forgot,
     navigationOptions: {
       header: null,
     },

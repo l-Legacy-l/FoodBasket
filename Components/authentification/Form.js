@@ -55,11 +55,10 @@ export default class Form extends Component {
 
     componentDidMount = () => {
       const { screenProps } = this.props;
-      const { idFoodStockSort, idShoppingListSort } = screenProps.settingsObject;
 
       // Automatically loged if the user is not disconected
       if (firebase.auth().currentUser) {
-        console.log(`je passe id ${JSON.stringify(screenProps)}`);
+        const { idFoodStockSort, idShoppingListSort } = screenProps.settingsObject;
         getData('foodList').then(res => screenProps.updateFoodList(sort(res, idFoodStockSort || 0)));
         getData('shoppingList').then(res => screenProps.updateShoppingList(sort(res, idShoppingListSort || 0)));
         // Synchronize data between all the device on the same account when the list is updated
@@ -86,7 +85,6 @@ export default class Form extends Component {
     } else {
       frMessage = 'Erreur, cette adresse est déjà utilisé par un autre compte';
     }
-    console.log(`je passe erreur message ${message}`);
     this.setState({ errorMessage: frMessage });
   }
 
@@ -171,6 +169,17 @@ export default class Form extends Component {
         >
           <Text style={styles.buttonText}>{this.props.type}</Text>
         </TouchableOpacity>
+        {this.props.type === 'Se connecter'
+          ? (
+            <TouchableOpacity
+              onPress={this.props.forgotPassword}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>Mot de passe oublié</Text>
+            </TouchableOpacity>
+          )
+          : <View />
+        }
       </View>
     );
   }
