@@ -128,7 +128,7 @@ export default class MyShopping extends Component {
     const { screenProps } = this.props;
     Alert.alert(
       'Confirmation du déplacement',
-      'Voulez-vous transférer votre liste de courses vers le stock de nourriture ?',
+      'Voulez-vous transférer votre liste de courses vers le stock de nourriture ? \n\nAttention, les produits introuvables qui ont été ajoutés ne seront pas transférés',
       [
         {
           text: 'Non',
@@ -139,8 +139,9 @@ export default class MyShopping extends Component {
           onPress: () => {
             const shoppingListTemp = _.cloneDeep(screenProps.shoppingList);
             const foodListTemp = _.cloneDeep(screenProps.foodList);
-
-            shoppingListTemp.forEach((shoppingListItem) => {
+            // only move foods added from API research
+            const shoppingListTempFiltered = _.filter(shoppingListTemp, shoppingListItem => shoppingListItem.barcode);
+            shoppingListTempFiltered.forEach((shoppingListItem) => {
               let matchFood = _.find(foodListTemp, foodListItem => foodListItem.barcode === shoppingListItem.barcode);
               if (matchFood !== undefined) {
                 matchFood.quantity = parseInt(matchFood.quantity, 10) + parseInt(shoppingListItem.quantity, 10);
@@ -151,9 +152,9 @@ export default class MyShopping extends Component {
             });
             const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
             storeData('foodList', sortedFoodListTemp);
-            shoppingListTemp.length = 0;
-            const sortedShoppingListTemp = sort(shoppingListTemp, screenProps.settingsObject.idShoppingListSort);
-            storeData('shoppingList', sortedShoppingListTemp);
+            shoppingListTempFiltered.length = 0;
+            // const sortedShoppingListTemp = sort(shoppingListTemp, screenProps.settingsObject.idShoppingListSort);
+            storeData('shoppingList', shoppingListTempFiltered);
             Toast.show('Le transfert a bien été effectué');
           },
         },

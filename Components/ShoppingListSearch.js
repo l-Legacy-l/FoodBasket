@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import { View, FlatList } from 'react-native';
-import { SearchBar, Icon, ListItem } from 'react-native-elements';
+import {
+  View, FlatList, TouchableOpacity, Text,
+} from 'react-native';
+import {
+  SearchBar, Icon, ListItem, Button,
+} from 'react-native-elements';
 import DialogInput from 'react-native-dialog-input';
 import _ from 'lodash';
 import Toast from 'react-native-simple-toast';
@@ -124,23 +128,29 @@ export default class componentName extends Component {
 
     return (
       <View>
-        <SearchBar
-          placeholder="Entrer le nom du produit"
-          onChangeText={this.updateSearch}
-          value={search}
-          lightTheme
-          round
-          showLoading={this.state.showLoading}
-          inputStyle={{ color: 'black' }}
-          searchIcon={(
-            <Icon
-              name="magnify"
-              type="material-community"
-              color="black"
-            />
-        )}
-        />
-
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <SearchBar
+            placeholder="Entrer le nom du produit"
+            onChangeText={this.updateSearch}
+            value={search}
+            lightTheme
+            round
+            showLoading={this.state.showLoading}
+            inputStyle={{ color: 'black', fontSize: 14 }}
+            containerStyle={{ width: '70%', backgroundColor: 'white' }}
+          />
+          <Button
+            title="Produit introuvable ?"
+            buttonStyle={{
+              backgroundColor: '#517fa4',
+              borderRadius: 10,
+              width: '55%',
+              height: 50,
+            }}
+            titleStyle={{ fontSize: 13 }}
+            onPress={() => this.props.navigation.navigate('AddShoppingItem')}
+          />
+        </View>
         <FlatList
           keyExtractor={this.keyExtractor}
           data={this.state.data}

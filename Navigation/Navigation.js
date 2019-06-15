@@ -10,6 +10,7 @@ import SignIn from '../Components/authentification/SignIn';
 import Forgot from '../Components/authentification/Forgot';
 import FoodListSearch from '../Components/FoodListSearch';
 import ShoppingListSearch from '../Components/ShoppingListSearch';
+import AddShoppingItem from '../Components/AddShoppingItem';
 import Camera from '../Components/Camera';
 import AddFoodItem from '../Components/AddFoodItem';
 import MyFoods from '../Components/MyFoods';
@@ -69,6 +70,13 @@ const SearchStackNavigator = createStackNavigator({
     screen: ShoppingListSearch,
     navigationOptions: {
       title: 'Rechercher des produits',
+    },
+  },
+
+  AddShoppingItem: {
+    screen: AddShoppingItem,
+    navigationOptions: {
+      title: 'Ajouter un produit',
     },
   },
 
