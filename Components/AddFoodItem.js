@@ -1,7 +1,7 @@
 /* eslint-disable no-return-assign */
 import React, { Component } from 'react';
 import {
-  StyleSheet, View, Button,
+  StyleSheet, View, Button, ScrollView,
 } from 'react-native';
 import t from 'tcomb-form-native';
 import ImageFactory from 'react-native-image-picker-form';
@@ -25,7 +25,7 @@ const formStyles = {
   },
   controlLabel: {
     normal: {
-      color: 'blue',
+      color: '#517fa4',
       fontSize: 18,
       marginBottom: 7,
       fontWeight: '600',
@@ -100,16 +100,16 @@ export default class AddFoodItem extends Component {
 
   render() {
     return (
-      <View>
+      <ScrollView>
         <View style={styles.container}>
           <Form ref={c => (this._form = c)} type={FoodItem} options={options} value={this.value} />
         </View>
 
         <View style={{ padding: 20 }}>
-          <Button style={{ marginTop: 10 }} title="Envoyer" onPress={this.handleSubmit} />
+          <Button style={{ marginTop: 10 }} color="#517fa4" title="Envoyer" onPress={this.handleSubmit} />
         </View>
 
-      </View>
+      </ScrollView>
     );
   }
 }
