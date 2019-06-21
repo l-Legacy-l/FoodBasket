@@ -85,7 +85,7 @@ export default class AddShoppingItem extends PureComponent {
       const sortedShoppingListTemp = sort(shoppingListTemp, screenProps.settingsObject.idShoppingListSort);
       storeData('shoppingList', sortedShoppingListTemp);
 
-      Toast.show(`L'aliment ${`${value.Nom}`} a bien été ajoutée à la liste de course`);
+      Toast.show(`L'aliment ${`${value.Nom}`} a bien été ajouté à la liste de courses`);
     }
   }
 

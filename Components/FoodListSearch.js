@@ -57,7 +57,7 @@ export default class FoodListSearch extends React.Component {
             showButtonAdd: false,
           });
         } else {
-          Toast.show('Le code barre ne renvoie vers aucun produit');
+          Toast.show('Le code-barre ne renvoie vers aucun produit');
           this.setState({
             showButtonAdd: true,
             showFood: false,

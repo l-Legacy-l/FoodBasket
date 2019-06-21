@@ -176,7 +176,7 @@ export default class MyFoods extends Component {
                                         foodListTemp.splice(foodListItemIndex, 1);
                                         const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
                                         storeData('foodList', sortedFoodListTemp);
-                                        Toast.show(`Le produit ${foodName} a bien été supprimée`);
+                                        Toast.show(`Le produit ${foodName} a bien été supprimé`);
                                         PushNotification.cancelLocalNotifications({ id: `${item.barcode.slice(0, 8)}1` });
                                         PushNotification.cancelLocalNotifications({ id: `${item.barcode.slice(0, 8)}2` });
                                       },

@@ -242,7 +242,7 @@ render() {
                            shoppingListTemp.splice(shoppingListItemIndex, 1);
                            const sortedShoppingListTemp = sort(shoppingListTemp, screenProps.settingsObject.idShoppingListSort);
                            storeData('shoppingList', sortedShoppingListTemp);
-                           Toast.show(`Le produit ${foodName} a bien été supprimée`);
+                           Toast.show(`Le produit ${foodName} a bien été supprimé`);
                          },
                        },
                      ],

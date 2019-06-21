@@ -131,7 +131,7 @@ class FoodItem extends React.Component {
         this.setState({ isAddDialogVisible: false });
         const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
         storeData('foodList', sortedFoodListTemp);
-        Toast.show(`L'aliment${` ${foodName}`} a bien été ajoutée à la liste`);
+        Toast.show(`L'aliment ${` ${foodName}`} a bien été ajouté à la liste`);
       }
     } else {
       this.setState({ isAddDialogVisible: false, isRemoveDialogVisible: false });
@@ -194,7 +194,7 @@ class FoodItem extends React.Component {
                                 foodListTemp.splice(foodListItemIndex, 1);
                                 const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
                                 storeData('foodList', sortedFoodListTemp);
-                                Toast.show(`Le produit ${foodName} a bien été supprimée`);
+                                Toast.show(`Le produit ${foodName} a bien été supprimé`);
                               },
                             },
                           ],

@@ -123,7 +123,7 @@ export default class FoodOptions extends Component {
       storeData('shoppingList', sortedShoppingListTemp);
     }
 
-    Toast.show(`Le produit ${this.foodName}a bien été ajouté à votre liste de course`);
+    Toast.show(`Le produit ${this.foodName} a bien été ajouté à votre liste de courses`);
   }
 
   render() {
@@ -352,7 +352,7 @@ export default class FoodOptions extends Component {
                   if (parseInt(value.nativeEvent.text, 10) >= parseInt(this.food.quantity, 10)) {
                     this.addFoodToShoppingList(1, 'automatique');
                   }
-                  Toast.show('La quantité minimale pour ce produit a bien été modifié');
+                  Toast.show('La quantité minimale pour ce produit a bien été modifiée');
                 } else {
                   Toast.show('Vous devez rentrer un entier valide compris entre 1 et 20');
                 }

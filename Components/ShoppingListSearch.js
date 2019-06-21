@@ -62,7 +62,7 @@ export default class componentName extends Component {
         let quantity = parseInt(shoppingListTemp[shoppingListItemIndex].quantity, 10);
         quantity += inputNumber;
         shoppingListTemp[shoppingListItemIndex].quantity = quantity;
-        Toast.show(`La quantité de ${`${foodName}`} a bien été modifié dans la liste de course`);
+        Toast.show(`La quantité de ${`${foodName}`} a bien été modifiée dans la liste de courses`);
       } else {
         const shoppingItem = {};
 
@@ -82,7 +82,7 @@ export default class componentName extends Component {
         shoppingItem.quantity = inputText;
 
         shoppingListTemp.push(shoppingItem);
-        Toast.show(`L'aliment ${`${foodName}`} a bien été ajoutée à la liste de course`);
+        Toast.show(`L'aliment ${`${foodName}`} a bien été ajouté à la liste de courses`);
       }
 
       this.setState({ isDialogVisible: false });
