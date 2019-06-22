@@ -118,7 +118,7 @@ class FoodItem extends React.Component {
         foodItem.imageIngredients = food.image_ingredients_url;
         foodItem.imageNutrients = food.image_nutrition_url;
         foodItem.ingredients = food.ingredients_text_fr;
-        foodItem.name = food.product_name_fr;
+        foodItem.name = food.product_name_fr ? food.product_name_fr : 'Inconnu';
         if (Object.keys(food.nutriments).length > 0) {
           foodItem.nutrients = food.nutriments;
         }
@@ -155,7 +155,7 @@ class FoodItem extends React.Component {
           <View styles={styles.contentContainer}>
             <View style={styles.contentHeader}>
               <Text style={styles.titleText}>
-                {food.product_name_fr}
+                {food.product_name_fr ? food.product_name_fr : 'Inconnu'}
               </Text>
             </View>
 

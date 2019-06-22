@@ -73,7 +73,7 @@ export default class componentName extends Component {
         shoppingItem.imageIngredients = this.food.image_ingredients_url;
         shoppingItem.imageNutrients = this.food.image_nutrition_url;
         shoppingItem.ingredients = this.food.ingredients_text_fr;
-        shoppingItem.name = this.food.product_name_fr;
+        shoppingItem.name = this.food.product_name_fr ? this.food.product_name_fr : 'Inconnu';
         if (Object.keys(this.food.nutriments).length > 0) {
           shoppingItem.nutrients = this.food.nutriments;
         }
@@ -96,7 +96,7 @@ export default class componentName extends Component {
   renderItem = ({ item }) => (
     <ListItem
       key={item.code}
-      title={item.product_name_fr}
+      title={item.product_name_fr ? item.product_name_fr : 'Inconnu'}
       titleStyle={{ fontSize: 20 }}
       leftAvatar={{
         source: item.image_front_url !== undefined

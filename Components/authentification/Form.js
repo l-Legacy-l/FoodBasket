@@ -59,8 +59,8 @@ export default class Form extends Component {
       // Automatically loged if the user is not disconected
       if (firebase.auth().currentUser) {
         const { idFoodStockSort, idShoppingListSort } = screenProps.settingsObject;
-        getData('foodList').then(res => screenProps.updateFoodList(sort(res, idFoodStockSort || 0)));
-        getData('shoppingList').then(res => screenProps.updateShoppingList(sort(res, idShoppingListSort || 0)));
+        getData('foodList').then(res => screenProps.updateFoodList(sort(res, idFoodStockSort)));
+        getData('shoppingList').then(res => screenProps.updateShoppingList(sort(res, idShoppingListSort)));
         // Synchronize data between all the device on the same account when the list is updated
         const { uid } = firebase.auth().currentUser;
         const foodListRef = firebase.database().ref(`/foodList/users/${uid}`);
