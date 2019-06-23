@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  StyleSheet, View, Text, Image, TouchableHighlight, Alert,
+  StyleSheet, View, Text, Image, Alert,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import DialogInput from 'react-native-dialog-input';
@@ -13,12 +13,12 @@ import sort from '../Sortings/Sorting';
 const styles = StyleSheet.create(
   {
     mainContainer: {
-      height: 250,
+      height: 270,
       marginTop: 5,
       flexDirection: 'row',
     },
     image: {
-      width: 170,
+      width: '42%',
       height: 250,
       margin: 5,
       resizeMode: 'cover',
@@ -51,7 +51,6 @@ const styles = StyleSheet.create(
     },
     contentIcons: {
       flex: 1,
-      marginRight: 5,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -85,7 +84,7 @@ class FoodItem extends React.Component {
     if (!Number.isNaN(inputNumber) && inputNumber >= 1 && inputNumber <= 20) {
       const { food, screenProps } = this.props;
       let foodName = '';
-      foodName = food.product_name_fr !== undefined ? food.product_name_fr : '';
+      foodName = food.product_name_fr !== undefined ? food.product_name_fr : 'Inconnu';
       const foodListTemp = _.cloneDeep(screenProps.foodList);
       const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
 
@@ -142,124 +141,118 @@ class FoodItem extends React.Component {
   render() {
     const { food, screenProps } = this.props;
     return (
-      <TouchableHighlight>
-        <View style={styles.mainContainer}>
-          <Image
-            style={styles.image}
-            source={food.image_front_url !== undefined
-              ? { uri: food.image_front_url }
-              : require('../assets/noPicture.png')
+      <View style={styles.mainContainer}>
+        <Image
+          style={styles.image}
+          source={food.image_front_url !== undefined
+            ? { uri: food.image_front_url }
+            : require('../assets/noPicture.png')
             }
-          />
+        />
 
-          <View styles={styles.contentContainer}>
-            <View style={styles.contentHeader}>
-              <Text style={styles.titleText}>
-                {food.product_name_fr ? food.product_name_fr : 'Inconnu'}
-              </Text>
-            </View>
-
-            <View style={styles.contentBarcode}>
-              <Text style={styles.barcodeText}>
-                {food.code}
-              </Text>
-            </View>
-
-            <View style={styles.contentIcons}>
-              {_.find(screenProps.foodList, foodListItem => foodListItem.barcode === food.code)
-                ? (
-                  <View style={styles.deleteIcons}>
-                    <Icon
-                      reverse
-                      name="delete"
-                      type="material-community"
-                      color="#517fa4"
-                      size={20}
-                      onPress={() => {
-                        Alert.alert(
-                          'Confirmation de suppression',
-                          'Voulez-vous supprimer ce produit de votre liste ?',
-                          [
-                            {
-                              text: 'Non',
-                              style: 'cancel',
-                            },
-                            {
-                              text: 'Oui',
-                              onPress: () => {
-                                let foodName = '';
-                                foodName = food.product_name_fr !== undefined ? food.product_name_fr : '';
-                                const foodListTemp = _.cloneDeep(screenProps.foodList);
-                                const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
-                                foodListTemp.splice(foodListItemIndex, 1);
-                                const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
-                                storeData('foodList', sortedFoodListTemp);
-                                Toast.show(`Le produit ${foodName} a bien été supprimé`);
-                              },
-                            },
-                          ],
-                          { cancelable: true },
-                        );
-                      }}
-                    />
-                    <Icon
-                      reverse
-                      name="playlist-minus"
-                      type="material-community"
-                      color="#517fa4"
-                      size={20}
-                      onPress={() => {
-                        this.setState({ isRemoveDialogVisible: true });
-                      }}
-                    />
-                  </View>
-                )
-
-
-                : <View />
-            }
-              <View style={styles.plusIcons}>
-
-                <Icon
-                  reverse
-                  name="playlist-plus"
-                  type="material-community"
-                  color="#517fa4"
-                  size={20}
-                  onPress={() => {
-                    this.setState({ isAddDialogVisible: true });
-                  }}
-                />
-              </View>
-
-            </View>
+        <View styles={styles.contentContainer}>
+          <View style={styles.contentHeader}>
+            <Text style={styles.titleText}>
+              {food.product_name_fr ? food.product_name_fr : 'Inconnu'}
+            </Text>
           </View>
-          <DialogInput
-            isDialogVisible={this.state.isRemoveDialogVisible}
-            title="Quantité à supprimer"
-            message="Entrer la quantité du produit à supprimer de la liste"
-            submitText="Supprimer"
-            cancelText="Annuler"
-            textInputProps={{ keyboardType: 'numeric' }}
-            submitInput={inputText => this.sendInput(inputText, 'delete')}
-            closeDialog={() => this.setState({ isRemoveDialogVisible: false })}
-          />
 
-          <DialogInput
-            isDialogVisible={this.state.isAddDialogVisible}
-            title="Quantité à ajouter"
-            message="Entrer la quantité du produit à ajouter à la liste"
-            submitText="Ajouter"
-            cancelText="Annuler"
-            textInputProps={{ keyboardType: 'numeric' }}
-            submitInput={inputText => this.sendInput(inputText, 'add')}
-            closeDialog={() => this.setState({ isAddDialogVisible: false })}
-          />
+          <View style={styles.contentBarcode}>
+            <Text style={styles.barcodeText}>
+              {food.code}
+            </Text>
+          </View>
+
+          <View style={styles.contentIcons}>
+            {_.find(screenProps.foodList, foodListItem => foodListItem.barcode === food.code)
+              ? (
+                <View style={styles.deleteIcons}>
+                  <Icon
+                    reverse
+                    name="delete"
+                    type="material-community"
+                    color="#517fa4"
+                    size={20}
+                    onPress={() => {
+                      Alert.alert(
+                        'Confirmation de suppression',
+                        'Voulez-vous supprimer ce produit de votre liste ?',
+                        [
+                          {
+                            text: 'Non',
+                            style: 'cancel',
+                          },
+                          {
+                            text: 'Oui',
+                            onPress: () => {
+                              let foodName = '';
+                              foodName = food.product_name_fr !== undefined ? food.product_name_fr : '';
+                              const foodListTemp = _.cloneDeep(screenProps.foodList);
+                              const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
+                              foodListTemp.splice(foodListItemIndex, 1);
+                              const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
+                              storeData('foodList', sortedFoodListTemp);
+                              Toast.show(`Le produit ${foodName} a bien été supprimé`);
+                            },
+                          },
+                        ],
+                        { cancelable: true },
+                      );
+                    }}
+                  />
+                  <Icon
+                    reverse
+                    name="playlist-minus"
+                    type="material-community"
+                    color="#517fa4"
+                    size={20}
+                    onPress={() => {
+                      this.setState({ isRemoveDialogVisible: true });
+                    }}
+                  />
+                </View>
+              )
+              : <View />
+            }
+            <View style={styles.plusIcons}>
+
+              <Icon
+                reverse
+                name="playlist-plus"
+                type="material-community"
+                color="#517fa4"
+                size={20}
+                onPress={() => {
+                  this.setState({ isAddDialogVisible: true });
+                }}
+              />
+            </View>
+
+          </View>
         </View>
-      </TouchableHighlight>
+        <DialogInput
+          isDialogVisible={this.state.isRemoveDialogVisible}
+          title="Quantité à supprimer"
+          message="Entrer la quantité du produit à supprimer de la liste"
+          submitText="Supprimer"
+          cancelText="Annuler"
+          textInputProps={{ keyboardType: 'numeric' }}
+          submitInput={inputText => this.sendInput(inputText, 'delete')}
+          closeDialog={() => this.setState({ isRemoveDialogVisible: false })}
+        />
+
+        <DialogInput
+          isDialogVisible={this.state.isAddDialogVisible}
+          title="Quantité à ajouter"
+          message="Entrer la quantité du produit à ajouter à la liste"
+          submitText="Ajouter"
+          cancelText="Annuler"
+          textInputProps={{ keyboardType: 'numeric' }}
+          submitInput={inputText => this.sendInput(inputText, 'add')}
+          closeDialog={() => this.setState({ isAddDialogVisible: false })}
+        />
+      </View>
     );
   }
 }
-
-
 export default FoodItem;

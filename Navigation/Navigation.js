@@ -31,6 +31,9 @@ const FoodDetailsTopNavigator = createMaterialTopTabNavigator({
     style: {
       backgroundColor: 'white',
     },
+    labelStyle: {
+      fontSize: 11,
+    },
     activeTintColor: '#517fa4',
     inactiveTintColor: 'black',
     indicatorStyle: {

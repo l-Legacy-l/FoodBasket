@@ -53,7 +53,7 @@ export default class componentName extends Component {
 
     if (!Number.isNaN(inputNumber) && inputNumber >= 1 && inputNumber <= 20) {
       const { screenProps } = this.props;
-      const foodName = this.food.product_name_fr !== undefined ? this.food.product_name_fr : '';
+      const foodName = this.food.product_name_fr !== undefined ? this.food.product_name_fr : 'Inconnu';
 
       const shoppingListTemp = _.cloneDeep(screenProps.shoppingList);
       const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, foodListItem => foodListItem.barcode === this.food.code);
@@ -136,7 +136,7 @@ export default class componentName extends Component {
             lightTheme
             round
             showLoading={this.state.showLoading}
-            inputStyle={{ color: 'black', fontSize: 14 }}
+            inputStyle={{ color: 'black', fontSize: 13 }}
             containerStyle={{ width: '70%', backgroundColor: 'white' }}
           />
           <Button

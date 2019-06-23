@@ -83,7 +83,7 @@ export default class MyShopping extends Component {
     if (!Number.isNaN(inputNumber) && inputNumber >= 1 && inputNumber <= 20) {
       const { screenProps } = this.props;
       let foodName = '';
-      foodName = this.shoppingListItem.name !== undefined ? this.shoppingListItem.name : '';
+      foodName = this.shoppingListItem.name !== undefined ? this.shoppingListItem.name : 'Inconnu';
       const shoppingListTemp = _.cloneDeep(screenProps.shoppingList);
       const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, shoppingListItem => shoppingListItem.barcode === this.shoppingListItem.barcode);
 

@@ -50,7 +50,7 @@ export default class FoodOptions extends Component {
   constructor(props) {
     super(props);
     this.food = _.find(this.props.screenProps.foodList, food => food.barcode === this.props.navigation.state.params.barcode);
-    this.foodName = this.food.name !== undefined ? this.food.name : '';
+    this.foodName = this.food.name !== undefined ? this.food.name : 'Inconnu';
 
     this.state = {
       isVisible: false,

@@ -61,7 +61,7 @@ export default class MyFoods extends Component {
     // Check if inputText is a valid number
     if (!Number.isNaN(inputNumber) && inputNumber >= 1 && inputNumber <= 20) {
       const { screenProps } = this.props;
-      const foodName = this.foodListItem.name !== undefined ? this.foodListItem.name : '';
+      const foodName = this.foodListItem.name !== undefined ? this.foodListItem.name : 'Inconnu';
       const foodListTemp = _.cloneDeep(screenProps.foodList);
       const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.foodListItem.barcode);
       const food = foodListTemp[foodListItemIndex];
