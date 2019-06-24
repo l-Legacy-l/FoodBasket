@@ -57,7 +57,6 @@ export default class FoodOptions extends Component {
       isAddDialogVisible: false,
       isAddShoppingVisible: false,
       isRemoveDialogVisible: false,
-      date: this.food.expirationDate,
     };
   }
 
@@ -128,6 +127,8 @@ export default class FoodOptions extends Component {
 
   render() {
     const { screenProps } = this.props;
+
+    this.food = _.find(screenProps.foodList, food => food.barcode === this.props.navigation.state.params.barcode);
 
     return (
       <View>
@@ -216,7 +217,7 @@ export default class FoodOptions extends Component {
             </Tooltip>
             <DatePicker
               style={{ width: 195 }}
-              date={this.state.date}
+              date={this.food.expirationDate}
               mode="date"
               androidMode="spinner"
               placeholder="Sélection"
@@ -237,7 +238,6 @@ export default class FoodOptions extends Component {
                 },
               }}
               onDateChange={(date) => {
-                this.setState({ date });
                 const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
                 const foodListTemp = _.cloneDeep(screenProps.foodList);
                 const { settingsObject } = screenProps;
