@@ -13,9 +13,9 @@
     "alphabetize-object-keys": "^2.0.1",
     "babel-eslint": "^10.0.1",
     "lodash": "^4.17.11",
-    "react": "16.6.3",
-    "react-native": "0.58.5",
-    "react-native-camera": "^1.12.0",
+    "react": "16.8.3",
+    "react-native": "0.59.9",
+    "react-native-camera": "git+https://git@github.com/react-native-community/react-native-camera.git",
     "react-native-datepicker": "^1.7.2",
     "react-native-dialog-input": "^1.0.7",
     "react-native-elements": "^1.1.0",
@@ -30,7 +30,7 @@
     "react-native-rename": "^2.4.1",
     "react-native-simple-toast": "^0.0.8",
     "react-native-vector-icons": "^6.4.2",
-    "react-navigation": "^3.3.0",
+    "react-navigation": "^3.11.0",
     "tcomb-form-native": "^0.6.20"
   },
   "devDependencies": {

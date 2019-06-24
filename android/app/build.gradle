@@ -105,7 +105,12 @@ android {
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
+        missingDimensionStrategy 'react-native-camera', 'mlkit'
     }
+    packagingOptions {
+        exclude 'META-INF/androidx.exifinterface_exifinterface.version'
+    }
+    
     splits {
         abi {
             reset()
