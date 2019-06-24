@@ -186,7 +186,7 @@ class FoodItem extends React.Component {
                             text: 'Oui',
                             onPress: () => {
                               let foodName = '';
-                              foodName = food.product_name_fr !== undefined ? food.product_name_fr : '';
+                              foodName = food.product_name_fr !== undefined ? food.product_name_fr : 'Inconnu';
                               const foodListTemp = _.cloneDeep(screenProps.foodList);
                               const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === food.code);
                               foodListTemp.splice(foodListItemIndex, 1);

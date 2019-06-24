@@ -291,7 +291,7 @@ render() {
       <DialogInput
         isDialogVisible={this.state.isRemoveDialogVisible}
         title="Quantité à supprimer"
-        message="Entrer la quantité du produit à supprimer de la liste de course"
+        message="Entrer la quantité du produit à supprimer de la liste de courses"
         submitText="Supprimer"
         cancelText="Annuler"
         textInputProps={{ keyboardType: 'numeric' }}
@@ -302,7 +302,7 @@ render() {
       <DialogInput
         isDialogVisible={this.state.isAddDialogVisible}
         title="Quantité à ajouter"
-        message="Entrer la quantité du produit à ajouter à la liste de course"
+        message="Entrer la quantité du produit à ajouter à la liste de courses"
         submitText="Ajouter"
         cancelText="Annuler"
         textInputProps={{ keyboardType: 'numeric' }}

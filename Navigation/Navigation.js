@@ -23,7 +23,7 @@ import FoodNutritions from '../Components/FoodNutritions';
 const FoodDetailsTopNavigator = createMaterialTopTabNavigator({
   Options: FoodOptions,
   Ingrédients: FoodIngredients,
-  Nutritions: FoodNutritions,
+  Nutrition: FoodNutritions,
 },
 {
   initialRouteName: 'Options',
