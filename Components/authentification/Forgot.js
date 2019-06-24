@@ -68,7 +68,7 @@ export default class Forgot extends Component {
       <View style={styles.container}>
         <View style={{ marginTop: 25, alignItems: 'center' }}>
           <Image
-            style={{ width: 130, height: 130 }}
+            style={{ height: 130, resizeMode: 'contain' }}
             source={require('../../assets/FoodBasket.png')}
           />
           <Text style={styles.logoText}>Bienvenue sur FoodBasket</Text>

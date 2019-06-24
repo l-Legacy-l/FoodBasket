@@ -10,8 +10,8 @@ import sort from '../../Sortings/Sorting';
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 10,
   },
   inputBox: {
     width: 300,
@@ -123,7 +123,7 @@ export default class Form extends Component {
     return (
       <View style={styles.container}>
         <Image
-          style={{ width: 130, height: 130 }}
+          style={{ height: 130, resizeMode: 'contain' }}
           source={require('../../assets/FoodBasket.png')}
         />
         <Text style={styles.logoText}>Bienvenue sur FoodBasket</Text>
