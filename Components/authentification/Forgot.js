@@ -94,13 +94,18 @@ export default class Forgot extends Component {
           <TouchableOpacity
             style={styles.button}
             onPress={
-              () => firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
-                // eslint-disable-next-line no-alert
-                // eslint-disable-next-line no-undef
-                alert('L\'e-mail de récupération a bien été envoyé');
-                this.setState({ errorMessage: null });
-              })
-                .catch(err => this.translateErrorMessage(err.message))
+              () => {
+                if (this.state.email) {
+                  firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
+                    // eslint-disable-next-line no-alert
+                    // eslint-disable-next-line no-undef
+                    alert('L\'e-mail de récupération a bien été envoyé');
+                    this.setState({ errorMessage: null });
+                  })
+                    .catch(err => this.translateErrorMessage(err.message));
+                }
+                this.setState({ errorMessage: 'Erreur, vous devez remplir tous les champs' });
+              }
             }
           >
             <Text style={styles.buttonText}>Envoyer le mail de récupération</Text>

@@ -90,11 +90,15 @@ export default class Form extends Component {
 
   handleSignUp = () => {
     const { email, password } = this.state;
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(this.props.navigate).then(() => Toast.show('Inscription réussie'))
-      .catch(error => this.translateErrorMessage(error.message));
+    if (email && password) {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(this.props.navigate).then(() => Toast.show('Inscription réussie'))
+        .catch(error => this.translateErrorMessage(error.message));
+    } else {
+      this.setState({ errorMessage: 'Erreur, vous devez remplir tous les champs' });
+    }
   }
 
 
@@ -102,21 +106,25 @@ export default class Form extends Component {
     const { email, password } = this.state;
     const { screenProps } = this.props;
     const { idFoodStockSort, idShoppingListSort } = screenProps.settingsObject;
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => {
-        getData('foodList').then(res => screenProps.updateFoodList(sort(res, idFoodStockSort || 0)));
-        getData('shoppingList').then(res => screenProps.updateShoppingList(sort(res, idShoppingListSort || 0)));
-        // Synchronize data between all the device on the same account when the list is updated
-        const { uid } = firebase.auth().currentUser;
-        const foodListRef = firebase.database().ref(`/foodList/users/${uid}`);
-        foodListRef.on('value', snapshot => screenProps.updateFoodList(snapshot.val() === null ? [] : snapshot.val()));
-        const shoppingListRef = firebase.database().ref(`/shoppingList/users/${uid}`);
-        shoppingListRef.on('value', snapshot => screenProps.updateShoppingList(snapshot.val() === null ? [] : snapshot.val()));
-      })
-      .then(this.props.navigate)
-      .catch(error => this.translateErrorMessage(error.message));
+    if (email && password) {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => {
+          getData('foodList').then(res => screenProps.updateFoodList(sort(res, idFoodStockSort || 0)));
+          getData('shoppingList').then(res => screenProps.updateShoppingList(sort(res, idShoppingListSort || 0)));
+          // Synchronize data between all the device on the same account when the list is updated
+          const { uid } = firebase.auth().currentUser;
+          const foodListRef = firebase.database().ref(`/foodList/users/${uid}`);
+          foodListRef.on('value', snapshot => screenProps.updateFoodList(snapshot.val() === null ? [] : snapshot.val()));
+          const shoppingListRef = firebase.database().ref(`/shoppingList/users/${uid}`);
+          shoppingListRef.on('value', snapshot => screenProps.updateShoppingList(snapshot.val() === null ? [] : snapshot.val()));
+        })
+        .then(this.props.navigate)
+        .catch(error => this.translateErrorMessage(error.message));
+    } else {
+      this.setState({ errorMessage: 'Erreur, vous devez remplir tous les champs' });
+    }
   }
 
   render() {
