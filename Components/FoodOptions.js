@@ -132,284 +132,289 @@ export default class FoodOptions extends Component {
 
     return (
       <View>
-        <ScrollView>
-          {this.food.imageFront !== undefined
-            ? (
-              <Modal
-                visible={this.state.isVisible}
-                onRequestClose={() => this.setState({ isVisible: false })}
-                animationType="fade"
-                transparent
-              >
-                <ImageViewer imageUrls={[{ url: this.food.imageFront }]} />
-              </Modal>
-            )
-            : <View />
+        {this.food
+          ? (
+            <ScrollView>
+              {this.food.imageFront !== undefined
+                ? (
+                  <Modal
+                    visible={this.state.isVisible}
+                    onRequestClose={() => this.setState({ isVisible: false })}
+                    animationType="fade"
+                    transparent
+                  >
+                    <ImageViewer imageUrls={[{ url: this.food.imageFront }]} />
+                  </Modal>
+                )
+                : <View />
 
         }
-          <View style={[styles.viewContainer, { elevation: 2 }]}>
-            <TouchableOpacity
-              onPress={() => this.setState({ isVisible: true })}
-            >
-              <Image
-                source={this.food.imageFront !== undefined
-                  ? { uri: this.food.imageFront }
-                  : require('../assets/noPicture.png')
+              <View style={[styles.viewContainer, { elevation: 2 }]}>
+                <TouchableOpacity
+                  onPress={() => this.setState({ isVisible: true })}
+                >
+                  <Image
+                    source={this.food.imageFront !== undefined
+                      ? { uri: this.food.imageFront }
+                      : require('../assets/noPicture.png')
             }
-                style={styles.image}
-              />
-              <Text style={styles.extraText}>{this.food.barcode}</Text>
-            </TouchableOpacity>
-            <View style={{ justifyContent: 'center' }}>
-              <View style={{ width: screenWidth - screenWidth / 2.8 }}>
-                <Text style={styles.titleText}>{this.foodName}</Text>
-              </View>
-
-              <View>
-                <View style={{ width: screenWidth - screenWidth / 2.8, marginTop: 5 }}>
-                  <Text style={styles.extraText}>{this.food.brands}</Text>
-                </View>
-
-                <View style={{ width: screenWidth - screenWidth / 2.8, marginTop: 5 }}>
-                  <Text style={styles.extraText}>{this.food.productWeight}</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-          <View style={[styles.viewContainer, { marginTop: 20 }]}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={styles.titleText}> Quantité: </Text>
-              <Badge value={`x ${this.food.quantity} `} badgeStyle={{ backgroundColor: '#517fa4', height: 25 }} textStyle={{ fontSize: 18 }} />
-              <View style={{ width: screenWidth / 1.85 }}>
-                <View style={{ justifyContent: 'flex-end', flexDirection: 'row' }}>
-                  <Icon
-                    reverse
-                    name="playlist-plus"
-                    type="material-community"
-                    color="#517fa4"
-                    size={16}
-                    onPress={() => {
-                      this.setState({ isAddDialogVisible: true });
-                    }}
+                    style={styles.image}
                   />
-                  <Icon
-                    reverse
-                    name="playlist-minus"
-                    type="material-community"
-                    color="#517fa4"
-                    size={16}
-                    onPress={() => {
-                      this.setState({ isRemoveDialogVisible: true });
-                    }}
-                  />
+                  <Text style={styles.extraText}>{this.food.barcode}</Text>
+                </TouchableOpacity>
+                <View style={{ justifyContent: 'center' }}>
+                  <View style={{ width: screenWidth - screenWidth / 2.8 }}>
+                    <Text style={styles.titleText}>{this.foodName}</Text>
+                  </View>
+
+                  <View>
+                    <View style={{ width: screenWidth - screenWidth / 2.8, marginTop: 5 }}>
+                      <Text style={styles.extraText}>{this.food.brands}</Text>
+                    </View>
+
+                    <View style={{ width: screenWidth - screenWidth / 2.8, marginTop: 5 }}>
+                      <Text style={styles.extraText}>{this.food.productWeight}</Text>
+                    </View>
+                  </View>
                 </View>
               </View>
-            </View>
-          </View>
-          <View style={[styles.viewContainer, { marginTop: 30, alignItems: 'center' }]}>
-            <Tooltip
-              backgroundColor="#517fa4"
-              height={130}
-              width={190}
-              popover={<Text style={{ color: 'white' }}>Indiquez la date de péremption la plus proche. Une notification sera envoyé 1 semaine et une autre 2 jours avant la date d'expiration du produit (par défaut).</Text>}
-            >
-              <Text style={[styles.titleText, { fontSize: 16 }]}> Date de péremption: </Text>
-            </Tooltip>
-            <DatePicker
-              style={{ width: 195 }}
-              date={this.food.expirationDate}
-              mode="date"
-              androidMode="spinner"
-              placeholder="Sélection"
-              minDate={new Date().toISOString().substring(0, 10)}
-              format="YYYY-MM-DD"
-              confirmBtnText="Confirmer"
-              cancelBtnText="Annuler"
-              customStyles={{
-                dateIcon: {
-                  position: 'absolute',
-                  right: 0,
-                  top: 4,
-                  marginRight: 65,
-                },
-                dateInput: {
-                  marginLeft: 1,
-                  marginRight: '55%',
-                },
-              }}
-              onDateChange={(date) => {
-                const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
-                const foodListTemp = _.cloneDeep(screenProps.foodList);
-                const { settingsObject } = screenProps;
-                foodListTemp[foodListItemIndex].expirationDate = date;
-                const sortedFoodListTemp = sort(foodListTemp, settingsObject.idFoodStockSort);
-                storeData('foodList', sortedFoodListTemp);
-
-                if (settingsObject.isNotificationEnabled) {
-                  if (settingsObject.firstRemindTime !== null && settingsObject.firstRemindTime !== undefined) {
-                    PushNotification.localNotificationSchedule({
-                      /* Android Only Properties */
-                      id: `${this.food.barcode.slice(5, 13)}1`, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
-                      autoCancel: true, // (optional) default: true
-                      largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
-                      smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher"
-                      bigText: `Attention, votre aliment ${this.foodName} sera périmé dans ${settingsObject.firstRemindTimeString}`, // (optional) default: "message" prop
-                      vibrate: true, // (optional) default: true
-                      vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
-                      ongoing: false, // (optional) set whether this is an "ongoing" notification
-                      priority: 'high', // (optional) set notification priority, default: high
-                      visibility: 'private', // (optional) set notification visibility, default: private
-                      importance: 'high', // (optional) set notification importance, default: high
-
-                      /* iOS and Android properties */
-                      title: 'Avertissement de péremption', // (optional)
-                      message: `Attention, votre aliment ${this.foodName} sera périmé dans ${settingsObject.firstRemindTimeString}`, // (optional) default: "message" prop
-                      playSound: true, // (optional) default: true
-                      soundName: 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
-                      number: '10', // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
-                      date: new Date(new Date(date).getTime() - (settingsObject.firstRemindTime * 1000)), // in 60 secs
-                    });
-                  }
-
-                  if (settingsObject.secondRemindTime !== null && settingsObject.secondRemindTime !== undefined) {
-                    PushNotification.localNotificationSchedule({
-                      /* Android Only Properties */
-                      id: `${this.food.barcode.slice(5, 13)}2`, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
-                      autoCancel: true, // (optional) default: true
-                      largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
-                      smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher"
-                      bigText: `Attention, votre aliment ${this.foodName} sera périmé dans ${settingsObject.secondRemindTimeString}`, // (optional) default: "message" prop
-                      vibrate: true, // (optional) default: true
-                      vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
-                      ongoing: false, // (optional) set whether this is an "ongoing" notification
-                      priority: 'high', // (optional) set notification priority, default: high
-                      visibility: 'private', // (optional) set notification visibility, default: private
-                      importance: 'high', // (optional) set notification importance, default: high
-
-                      /* iOS and Android properties */
-                      title: 'Avertissement de péremption', // (optional)
-                      message: `Attention, votre aliment ${this.foodName} sera périmé dans ${settingsObject.secondRemindTimeString}`, // (optional) default: "message" prop
-                      playSound: true, // (optional) default: true
-                      soundName: 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
-                      number: '10', // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
-                      date: new Date(new Date(date).getTime() - (settingsObject.secondRemindTime * 1000)), // in 60 secs
-                    });
-                  }
-                  if (settingsObject.thirdRemindTime !== null && settingsObject.thirdRemindTime !== undefined) {
-                    PushNotification.localNotificationSchedule({
-                      /* Android Only Properties */
-                      id: `${this.food.barcode.slice(5, 13)}3`, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
-                      autoCancel: true, // (optional) default: true
-                      largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
-                      smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher"
-                      bigText: `Attention, votre aliment ${this.foodName} sera périmé dans ${settingsObject.thirdRemindTimeString}`, // (optional) default: "message" prop
-                      vibrate: true, // (optional) default: true
-                      vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
-                      ongoing: false, // (optional) set whether this is an "ongoing" notification
-                      priority: 'high', // (optional) set notification priority, default: high
-                      visibility: 'private', // (optional) set notification visibility, default: private
-                      importance: 'high', // (optional) set notification importance, default: high
-
-                      /* iOS and Android properties */
-                      title: 'Avertissement de péremption', // (optional)
-                      message: `Attention, votre aliment ${this.foodName} sera périmé dans ${settingsObject.thirdRemindTimeString}`, // (optional) default: "message" prop
-                      playSound: true, // (optional) default: true
-                      soundName: 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
-                      number: '10', // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
-                      date: new Date(new Date(date).getTime() - (settingsObject.thirdRemindTime * 1000)), // in 60 secs
-                    });
-                  }
-                }
-              }}
-            />
-          </View>
-          <View style={[styles.viewContainer, { marginTop: 30, alignItems: 'center' }]}>
-            <Tooltip
-              backgroundColor="#517fa4"
-              height={130}
-              width={190}
-              popover={<Text style={{ color: 'white' }}>Ce champ permet d'ajouter automatiquement le produit dans votre liste de courses une fois la limite de quantité minimale atteinte.</Text>}
-            >
-              <Text style={[styles.titleText, { fontSize: 16 }]}> Quantité minimale: </Text>
-            </Tooltip>
-            <Input
-              placeholder="Entrer une valeur"
-              containerStyle={{
-                width: 135, height: 40, borderWidth: 1, borderColor: '#9c9c9c',
-              }}
-              placeholderTextColor="#c4c4c4"
-              inputContainerStyle={{ borderBottomWidth: 0 }}
-              inputStyle={{ fontSize: 14 }}
-              keyboardType="number-pad"
-              onSubmitEditing={(value) => {
-                const inputValue = value.nativeEvent.text;
-                if (!Number.isNaN(inputValue) && inputValue >= 1 && inputValue <= 20) {
-                  const foodListTemp = _.cloneDeep(screenProps.foodList);
-                  const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
-                  foodListTemp[foodListItemIndex].minQuantity = value.nativeEvent.text;
-                  const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
-                  storeData('foodList', sortedFoodListTemp);
-                  if (parseInt(value.nativeEvent.text, 10) >= parseInt(this.food.quantity, 10)) {
-                    this.addFoodToShoppingList(1, 'automatique');
-                  }
-                  Toast.show('La quantité minimale pour ce produit a bien été modifiée');
-                } else {
-                  Toast.show('Vous devez rentrer un entier valide compris entre 1 et 20');
-                }
-              }}
-              defaultValue={this.food.minQuantity}
-
-            />
-
-          </View>
-          <View style={{ height: screenHeight / 6, flexDirection: 'row' }}>
-            <Icon
-              reverse
-              containerStyle={{ position: 'absolute', bottom: 10, right: 65 }}
-              name="cart-arrow-down"
-              type="material-community"
-              color="#517fa4"
-              size={18}
-              onPress={() => this.setState({ isAddShoppingVisible: true })}
-            />
-
-            <Icon
-              reverse
-              containerStyle={{ position: 'absolute', bottom: 10, right: 10 }}
-              name="delete"
-              type="material-community"
-              color="#517fa4"
-              size={18}
-              onPress={() => {
-                Alert.alert(
-                  'Confirmation de suppression',
-                  'Voulez-vous supprimer ce produit de votre liste ?',
-                  [
-                    {
-                      text: 'Non',
-                      style: 'cancel',
+              <View style={[styles.viewContainer, { marginTop: 20 }]}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={styles.titleText}> Quantité: </Text>
+                  <Badge value={`x ${this.food.quantity} `} badgeStyle={{ backgroundColor: '#517fa4', height: 25 }} textStyle={{ fontSize: 18 }} />
+                  <View style={{ width: screenWidth / 1.85 }}>
+                    <View style={{ justifyContent: 'flex-end', flexDirection: 'row' }}>
+                      <Icon
+                        reverse
+                        name="playlist-plus"
+                        type="material-community"
+                        color="#517fa4"
+                        size={16}
+                        onPress={() => {
+                          this.setState({ isAddDialogVisible: true });
+                        }}
+                      />
+                      <Icon
+                        reverse
+                        name="playlist-minus"
+                        type="material-community"
+                        color="#517fa4"
+                        size={16}
+                        onPress={() => {
+                          this.setState({ isRemoveDialogVisible: true });
+                        }}
+                      />
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <View style={[styles.viewContainer, { marginTop: 30, alignItems: 'center' }]}>
+                <Tooltip
+                  backgroundColor="#517fa4"
+                  height={130}
+                  width={190}
+                  popover={<Text style={{ color: 'white' }}>Indiquez la date de péremption la plus proche. Une notification sera envoyé 1 semaine et une autre 2 jours avant la date d'expiration du produit (par défaut).</Text>}
+                >
+                  <Text style={[styles.titleText, { fontSize: 16 }]}> Date de péremption: </Text>
+                </Tooltip>
+                <DatePicker
+                  style={{ width: 195 }}
+                  date={this.food.expirationDate}
+                  mode="date"
+                  androidMode="spinner"
+                  placeholder="Sélection"
+                  minDate={new Date().toISOString().substring(0, 10)}
+                  format="YYYY-MM-DD"
+                  confirmBtnText="Confirmer"
+                  cancelBtnText="Annuler"
+                  customStyles={{
+                    dateIcon: {
+                      position: 'absolute',
+                      right: 0,
+                      top: 4,
+                      marginRight: 65,
                     },
-                    {
-                      text: 'Oui',
-                      onPress: () => {
-                        const foodListTemp = _.cloneDeep(screenProps.foodList);
-                        const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
-                        foodListTemp.splice(foodListItemIndex, 1);
-                        const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
-                        storeData('foodList', sortedFoodListTemp);
-                        Toast.show(`Le produit ${this.foodName} a bien été supprimée`);
-                        this.props.navigation.goBack(null);
-                        PushNotification.cancelLocalNotifications({ id: `${this.food.barcode.slice(5, 13)}1` });
-                        PushNotification.cancelLocalNotifications({ id: `${this.food.barcode.slice(5, 13)}2` });
-                      },
+                    dateInput: {
+                      marginLeft: 1,
+                      marginRight: '55%',
                     },
-                  ],
-                  { cancelable: true },
-                );
-              }}
-            />
-          </View>
-        </ScrollView>
+                  }}
+                  onDateChange={(date) => {
+                    const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
+                    const foodListTemp = _.cloneDeep(screenProps.foodList);
+                    const { settingsObject } = screenProps;
+                    foodListTemp[foodListItemIndex].expirationDate = date;
+                    const sortedFoodListTemp = sort(foodListTemp, settingsObject.idFoodStockSort);
+                    storeData('foodList', sortedFoodListTemp);
+
+                    if (settingsObject.isNotificationEnabled) {
+                      if (settingsObject.firstRemindTime !== null && settingsObject.firstRemindTime !== undefined) {
+                        PushNotification.localNotificationSchedule({
+                          /* Android Only Properties */
+                          id: `${this.food.barcode.slice(5, 13)}1`, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
+                          autoCancel: true, // (optional) default: true
+                          largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
+                          smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher"
+                          bigText: `Attention, votre aliment ${this.foodName} sera périmé dans ${settingsObject.firstRemindTimeString}`, // (optional) default: "message" prop
+                          vibrate: true, // (optional) default: true
+                          vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+                          ongoing: false, // (optional) set whether this is an "ongoing" notification
+                          priority: 'high', // (optional) set notification priority, default: high
+                          visibility: 'private', // (optional) set notification visibility, default: private
+                          importance: 'high', // (optional) set notification importance, default: high
+
+                          /* iOS and Android properties */
+                          title: 'Avertissement de péremption', // (optional)
+                          message: `Attention, votre aliment ${this.foodName} sera périmé dans ${settingsObject.firstRemindTimeString}`, // (optional) default: "message" prop
+                          playSound: true, // (optional) default: true
+                          soundName: 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+                          number: '10', // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
+                          date: new Date(new Date(date).getTime() - (settingsObject.firstRemindTime * 1000)), // in 60 secs
+                        });
+                      }
+
+                      if (settingsObject.secondRemindTime !== null && settingsObject.secondRemindTime !== undefined) {
+                        PushNotification.localNotificationSchedule({
+                          /* Android Only Properties */
+                          id: `${this.food.barcode.slice(5, 13)}2`, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
+                          autoCancel: true, // (optional) default: true
+                          largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
+                          smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher"
+                          bigText: `Attention, votre aliment ${this.foodName} sera périmé dans ${settingsObject.secondRemindTimeString}`, // (optional) default: "message" prop
+                          vibrate: true, // (optional) default: true
+                          vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+                          ongoing: false, // (optional) set whether this is an "ongoing" notification
+                          priority: 'high', // (optional) set notification priority, default: high
+                          visibility: 'private', // (optional) set notification visibility, default: private
+                          importance: 'high', // (optional) set notification importance, default: high
+
+                          /* iOS and Android properties */
+                          title: 'Avertissement de péremption', // (optional)
+                          message: `Attention, votre aliment ${this.foodName} sera périmé dans ${settingsObject.secondRemindTimeString}`, // (optional) default: "message" prop
+                          playSound: true, // (optional) default: true
+                          soundName: 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+                          number: '10', // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
+                          date: new Date(new Date(date).getTime() - (settingsObject.secondRemindTime * 1000)), // in 60 secs
+                        });
+                      }
+                      if (settingsObject.thirdRemindTime !== null && settingsObject.thirdRemindTime !== undefined) {
+                        PushNotification.localNotificationSchedule({
+                          /* Android Only Properties */
+                          id: `${this.food.barcode.slice(5, 13)}3`, // (optional) Valid unique 32 bit integer specified as string. default: Autogenerated Unique ID
+                          autoCancel: true, // (optional) default: true
+                          largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
+                          smallIcon: 'ic_notification', // (optional) default: "ic_notification" with fallback for "ic_launcher"
+                          bigText: `Attention, votre aliment ${this.foodName} sera périmé dans ${settingsObject.thirdRemindTimeString}`, // (optional) default: "message" prop
+                          vibrate: true, // (optional) default: true
+                          vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+                          ongoing: false, // (optional) set whether this is an "ongoing" notification
+                          priority: 'high', // (optional) set notification priority, default: high
+                          visibility: 'private', // (optional) set notification visibility, default: private
+                          importance: 'high', // (optional) set notification importance, default: high
+
+                          /* iOS and Android properties */
+                          title: 'Avertissement de péremption', // (optional)
+                          message: `Attention, votre aliment ${this.foodName} sera périmé dans ${settingsObject.thirdRemindTimeString}`, // (optional) default: "message" prop
+                          playSound: true, // (optional) default: true
+                          soundName: 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+                          number: '10', // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
+                          date: new Date(new Date(date).getTime() - (settingsObject.thirdRemindTime * 1000)), // in 60 secs
+                        });
+                      }
+                    }
+                  }}
+                />
+              </View>
+              <View style={[styles.viewContainer, { marginTop: 30, alignItems: 'center' }]}>
+                <Tooltip
+                  backgroundColor="#517fa4"
+                  height={130}
+                  width={190}
+                  popover={<Text style={{ color: 'white' }}>Ce champ permet d'ajouter automatiquement le produit dans votre liste de courses une fois la limite de quantité minimale atteinte.</Text>}
+                >
+                  <Text style={[styles.titleText, { fontSize: 16 }]}> Quantité minimale: </Text>
+                </Tooltip>
+                <Input
+                  placeholder="Entrer une valeur"
+                  containerStyle={{
+                    width: 135, height: 40, borderWidth: 1, borderColor: '#9c9c9c',
+                  }}
+                  placeholderTextColor="#c4c4c4"
+                  inputContainerStyle={{ borderBottomWidth: 0 }}
+                  inputStyle={{ fontSize: 14 }}
+                  keyboardType="number-pad"
+                  onSubmitEditing={(value) => {
+                    const inputValue = value.nativeEvent.text;
+                    if (!Number.isNaN(inputValue) && inputValue >= 1 && inputValue <= 20) {
+                      const foodListTemp = _.cloneDeep(screenProps.foodList);
+                      const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
+                      foodListTemp[foodListItemIndex].minQuantity = value.nativeEvent.text;
+                      const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
+                      storeData('foodList', sortedFoodListTemp);
+                      if (parseInt(value.nativeEvent.text, 10) >= parseInt(this.food.quantity, 10)) {
+                        this.addFoodToShoppingList(1, 'automatique');
+                      }
+                      Toast.show('La quantité minimale pour ce produit a bien été modifiée');
+                    } else {
+                      Toast.show('Vous devez rentrer un entier valide compris entre 1 et 20');
+                    }
+                  }}
+                  defaultValue={this.food.minQuantity}
+                />
+
+              </View>
+              <View style={{ height: screenHeight / 6, flexDirection: 'row' }}>
+                <Icon
+                  reverse
+                  containerStyle={{ position: 'absolute', bottom: 10, right: 65 }}
+                  name="cart-arrow-down"
+                  type="material-community"
+                  color="#517fa4"
+                  size={18}
+                  onPress={() => this.setState({ isAddShoppingVisible: true })}
+                />
+
+                <Icon
+                  reverse
+                  containerStyle={{ position: 'absolute', bottom: 10, right: 10 }}
+                  name="delete"
+                  type="material-community"
+                  color="#517fa4"
+                  size={18}
+                  onPress={() => {
+                    Alert.alert(
+                      'Confirmation de suppression',
+                      'Voulez-vous supprimer ce produit de votre liste ?',
+                      [
+                        {
+                          text: 'Non',
+                          style: 'cancel',
+                        },
+                        {
+                          text: 'Oui',
+                          onPress: () => {
+                            const foodListTemp = _.cloneDeep(screenProps.foodList);
+                            const foodListItemIndex = _.findIndex(screenProps.foodList, foodListItem => foodListItem.barcode === this.food.barcode);
+                            foodListTemp.splice(foodListItemIndex, 1);
+                            const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
+                            storeData('foodList', sortedFoodListTemp);
+                            Toast.show(`Le produit ${this.foodName} a bien été supprimée`);
+                            this.props.navigation.goBack(null);
+                            PushNotification.cancelLocalNotifications({ id: `${this.food.barcode.slice(5, 13)}1` });
+                            PushNotification.cancelLocalNotifications({ id: `${this.food.barcode.slice(5, 13)}2` });
+                          },
+                        },
+                      ],
+                      { cancelable: true },
+                    );
+                  }}
+                />
+              </View>
+            </ScrollView>
+          )
+          : <View />
+      }
+
         <DialogInput
           isDialogVisible={this.state.isRemoveDialogVisible}
           title="Quantité à supprimer"
