@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  View, FlatList, TouchableOpacity, Text,
+  View, FlatList, TouchableOpacity,
 } from 'react-native';
 import {
   SearchBar, Icon, ListItem, Button,
@@ -109,16 +109,19 @@ export default class componentName extends Component {
       }}
       bottomDivider
       rightIcon={(
-        <Icon
-          name="cart-plus"
-          type="material-community"
-          color="#517fa4"
-          size={36}
+        <TouchableOpacity
           onPress={() => {
             this.setState({ isDialogVisible: true });
             this.food = item;
           }}
-        />
+        >
+          <Icon
+            name="cart-plus"
+            type="material-community"
+            color="#517fa4"
+            size={36}
+          />
+        </TouchableOpacity>
       )}
     />
   )
