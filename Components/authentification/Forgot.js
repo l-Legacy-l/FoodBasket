@@ -103,8 +103,9 @@ export default class Forgot extends Component {
                     this.setState({ errorMessage: null });
                   })
                     .catch(err => this.translateErrorMessage(err.message));
+                } else {
+                  this.setState({ errorMessage: 'Erreur, vous devez remplir tous les champs' });
                 }
-                this.setState({ errorMessage: 'Erreur, vous devez remplir tous les champs' });
               }
             }
           >

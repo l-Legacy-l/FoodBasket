@@ -106,7 +106,7 @@ export default class FoodOptions extends Component {
     const { screenProps } = this.props;
     const shoppingListTemp = _.cloneDeep(screenProps.shoppingList);
     const shoppingListItemIndex = _.findIndex(screenProps.shoppingList, shoppingListItem => shoppingListItem.barcode === this.food.barcode);
-    const foodToAdd = this.food;
+    const foodToAdd = _.cloneDeep(this.food);
     const quantity = parseInt(inputText, 10);
     if (shoppingListItemIndex === -1) {
       foodToAdd.quantity = quantity;
@@ -398,7 +398,7 @@ export default class FoodOptions extends Component {
                             foodListTemp.splice(foodListItemIndex, 1);
                             const sortedFoodListTemp = sort(foodListTemp, screenProps.settingsObject.idFoodStockSort);
                             storeData('foodList', sortedFoodListTemp);
-                            Toast.show(`Le produit ${this.foodName} a bien été supprimée`);
+                            Toast.show(`Le produit ${this.foodName} a bien été supprimé`);
                             this.props.navigation.goBack(null);
                             PushNotification.cancelLocalNotifications({ id: `${this.food.barcode.slice(5, 13)}1` });
                             PushNotification.cancelLocalNotifications({ id: `${this.food.barcode.slice(5, 13)}2` });

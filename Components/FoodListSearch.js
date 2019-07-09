@@ -121,7 +121,11 @@ export default class FoodListSearch extends React.Component {
             type="material-community"
             color="#517fa4"
             size={20}
-            onPress={() => this._loadFood()}
+            onPress={() => {
+              if (this.state.textToScan) {
+                this._loadFood();
+              }
+            }}
           />
 
         </View>
