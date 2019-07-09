@@ -1,7 +1,7 @@
-# FoodBasket
-
 <p align="center">
-  <img src="https://github.com/l-Legacy-l/FoodBasket/blob/master/assets/FoodBasket.png">
+  <img src="./android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png">
+  <h1 align="center">FoodBasket</h2>
+
 </p>
 
 This work was carried out as part of my final project at the Haute école en Hainaut. It aims to address the various issues related to the management of its food stock and its replenishment.
@@ -20,7 +20,7 @@ Share your lists, synchronize and contribute data with an account that can be us
 
 
 ## Usage
-The application is currently available on the *Google Play Store* [here](https://play.google.com/store/apps/details?id=com.foodbasket=com.foodbasket).
+The application is currently available on the *Google Play Store* [here](https://play.google.com/store/apps/details?id=com.foodbasket).
 
 ### *iOS*
 At the moment, there is no guarantee that the application will work on *iOS*, I didn't have the opportunity to try it and compile the project on this system.
